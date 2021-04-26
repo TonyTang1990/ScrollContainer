@@ -1,0 +1,11 @@
+# 文件以及目录过滤
+# 过滤library目录
+ScrollContainer/Library/
+# 过滤.vs目录
+ScrollContainer/.vs/
+# 过滤Temp目录
+ScrollContainer/Temp/
+# 过滤obj目录
+ScrollContainer/obj/
+# 过滤Log目录
+ScrollContainer/Log/
