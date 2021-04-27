@@ -14,9 +14,10 @@ using UnityEngine;
 /// </summary>
 public class GameLancher : MonoBehaviour
 {
-    /// <summary>
-    /// 窗口父节点
-    /// </summary>
-    [Header("窗口父节点")]
-    public Transform WindowParent;
+    void Start()
+    {
+        DontDestroyOnLoad(gameObject);  
+    }
+
+
 }
