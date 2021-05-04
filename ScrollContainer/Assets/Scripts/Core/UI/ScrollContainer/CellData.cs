@@ -1,5 +1,5 @@
 ﻿/*
- * Description:             NewCellData.cs
+ * Description:             CellData.cs
  * Author:                  TONYTANG
  * Create Date:             2021/04/19
  */
@@ -64,10 +64,10 @@ using UnityEngine;
 namespace TH.Modules.UI
 {
     /// <summary>
-    /// NewCellData.cs
+    /// CellData.cs
     /// 单元格数据抽象
     /// </summary>
-    public class NewCellData : IRecycle
+    public class CellData : IRecycle
     {
         /// <summary>
         /// 当前Cell索引
@@ -81,7 +81,7 @@ namespace TH.Modules.UI
         /// <summary>
         /// 拥有者单元格
         /// </summary>
-        protected NewBaseContainer mOwnerContainer;
+        protected BaseScrollContainer mOwnerContainer;
 
         /// <summary>
         /// Cell实例对象
@@ -107,18 +107,9 @@ namespace TH.Modules.UI
         private Vector2 mCellSize;
 
         /// <summary>
-        /// Cell原始模型
+        /// 单元格预制件索引
         /// </summary>
-        public GameObject CellPrefab
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Cell原始模型ID
-        /// </summary>
-        public int CellPrefabInstanceID
+        public int CellPrefabIndex
         {
             get;
             private set;
@@ -170,41 +161,38 @@ namespace TH.Modules.UI
             mOwnerContainer = null;
             CellGO = null;
             CellGORectTransform = null;
-            CellPrefab = null;
-            CellPrefabInstanceID = 0;
+            CellPrefabIndex = -1;
             mCellSize = Vector2.zero;
             mRectPos = Vector2.zero;
             mRectAbsPos = Vector2.zero;
             CellRect.Set(0.0f, 0.0f, 0.0f, 0.0f);
         }
         
-        public NewCellData()
+        public CellData()
         {
             CellIndex = -1;
             mOwnerContainer = null;
             CellGO = null;
             CellGORectTransform = null;
-            CellPrefab = null;
-            CellPrefabInstanceID = 0;
+            CellPrefabIndex = -1;
             mCellSize = Vector2.zero;
             mRectPos = Vector2.zero;
             mRectAbsPos = Vector2.zero;
             CellRect.Set(0.0f, 0.0f, 0.0f, 0.0f);
         }
-        
+
         /// <summary>
         /// 设置初始数据
         /// </summary>
-        /// <param name="cellprefab">单元格模板</param>
+        /// <param name="cellprefabindex">单元格模板索引</param>
         /// <param name="container">单元格容器</param>
         /// <param name="size">单元格大小(默认不传是预制件大小)</param>
-        public void setData(GameObject cellprefab, NewBaseContainer container, Vector2? size = null)
+        public void setData(int cellprefabindex, BaseScrollContainer container, Vector2? size = null)
         {
-            Debug.Assert(cellprefab != null && container != null, "单元格模板和单元格容器不允许传空!");
-            CellPrefab = cellprefab;
+            Debug.Assert(container != null, "单元格容器不允许传空!");
+            CellPrefabIndex = cellprefabindex;
             mOwnerContainer = container;
-            CellPrefabInstanceID = CellPrefab.GetInstanceID();
-            mCellSize = size == null ? CellPrefab.GetComponent<RectTransform>().rect.size : (Vector2)size;
+            mCellSize = size == null ? mOwnerContainer.getPrefabTemplateSizeWithPrefabIndex(CellPrefabIndex) : (Vector2)size;
             CellRect.Set(0.0f, 0.0f, mCellSize.x, mCellSize.y);
         }
 
@@ -251,7 +239,7 @@ namespace TH.Modules.UI
         /// <param name="cellmaskrect">cell的rect区域用于判定是否在Mask显示区域</param>
         public void setRect(Vector2 cellrectpos, Vector2 cellmaskrect)
         {
-            if (CellPrefab == null)
+            if (CellPrefabIndex == -1)
             {
                 return;
             }
@@ -329,14 +317,12 @@ namespace TH.Modules.UI
         public void clear()
         {
             mOwnerContainer = null;
-            CellPrefab = null;
-            CellPrefabInstanceID = 0;
             CellGO = null;
             CellGORectTransform = null;
             mCellSize = Vector2.zero;
             mRectPos = Vector2.zero;
             CellRect = Rect.zero;
-            ObjectPool.Singleton.push<NewCellData>(this);
+            ObjectPool.Singleton.push<CellData>(this);
         }
     }
 }

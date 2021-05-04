@@ -4,5 +4,47 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Resources/scenes/BottomToTopScene.unity
+    guid: 26802a640a02c27458776222de286f16
+  - enabled: 1
+    path: Assets/Resources/scenes/ChangeItemSizeScene.unity
+    guid: f14082c35fb7a3c4d9e8f0cf3bdb8d7e
+  - enabled: 1
+    path: Assets/Resources/scenes/ChatMessageListScene.unity
+    guid: 384e2ec39e4e87148b0e43458140a24e
+  - enabled: 1
+    path: Assets/Resources/scenes/ClickAndLoadMoreScene.unity
+    guid: 2b64e39bc0789af428097f5b1259a469
+  - enabled: 1
+    path: Assets/Resources/scenes/GridViewScene.unity
+    guid: e075014b92d78aa4a9b577577ff22560
+  - enabled: 1
+    path: Assets/Resources/scenes/HorizontalGalleryDemoScene.unity
+    guid: 8d0f4b7577a907749b22c1bb389cfd55
+  - enabled: 1
+    path: Assets/Resources/scenes/LauncherScene.unity
+    guid: 8ad7d4e34cf074d418b17f6c57efe16a
+  - enabled: 1
+    path: Assets/Resources/scenes/LeftToRightScene.unity
+    guid: c577a128a0de4c548a052d478904847f
+  - enabled: 1
+    path: Assets/Resources/scenes/PageViewDemoScene.unity
+    guid: 998e4a665d884844999cd600cca78fcf
+  - enabled: 1
+    path: Assets/Resources/scenes/RightToLeftScene.unity
+    guid: d7a91b122cb52294fbfb14bd1926e323
+  - enabled: 1
+    path: Assets/Resources/scenes/SelectAndDeleteOrMoveScene.unity
+    guid: efaa59b3622dfe94fac0c523ee009370
+  - enabled: 1
+    path: Assets/Resources/scenes/SpinDatePickerScene.unity
+    guid: f6c4b3f9ef85ff9408ccf87d8e18d5df
+  - enabled: 1
+    path: Assets/Resources/scenes/TopToBottomScene.unity
+    guid: 4f9b20f13aa77414b92bc8e9c8d9f635
+  - enabled: 1
+    path: Assets/Resources/scenes/VerticalGalleryDemoScene.unity
+    guid: bac19d5916ba8fc438024527cbe0b5e8
   m_configObjects: {}

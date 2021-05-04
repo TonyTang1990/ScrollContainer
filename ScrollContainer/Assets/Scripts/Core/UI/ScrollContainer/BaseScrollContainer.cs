@@ -1,5 +1,5 @@
 ﻿/*
- * Description:             NewBaseContainer.cs
+ * Description:             BaseScrollContainer.cs
  * Author:                  TONYTANG
  * Create Date:             2019/07/15
  */
@@ -22,9 +22,10 @@ namespace TH.Modules.UI
     /// <summary>
     /// 滚动单元格Cell容器基类抽象
     /// </summary>
-    public abstract class NewBaseContainer : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerExitHandler
+    public abstract class BaseScrollContainer : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerExitHandler
     {
         /// <summary>
+        /// Scroll Direction
         /// 滚动方向
         /// </summary>
         public enum EScrollDir
@@ -37,6 +38,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Avalible Drag Direction
         /// 允许的拖拽方向
         /// </summary>
         public enum EDragDirection
@@ -47,59 +49,83 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Is always allowed scroll
         /// 是否允许滚动(总开关)
         /// </summary>
         [Header("是否允许滚动(总开关)")]
         public bool IsAllowedScroll = true;
 
         /// <summary>
+        /// Is scrollable when scroll content is small than basic content size
         /// 是否允许内容没超出范围滚动
         /// </summary>
         [Header("是否允许内容未超框滚动")]
         public bool IsAllowedInsideScroll = false;
 
         /// <summary>
+        /// Is interruptable when auto move 
         /// 自动滚动是否可被拖动打断
         /// </summary>
         [Header("自动滚动是否可被拖动打断")]
         public bool IsAutoScrollInteruptable = true;
 
         /// <summary>
+        /// Cell position offset
+        /// 起始位置偏移(含水平和垂直)
+        /// </summary>
+        [Header("起始位置偏移(含水平和垂直)")]
+        public Vector2 BeginOffset = Vector2.one * 10;
+
+        /// <summary>
+        /// Cell space
+        /// Cell单元格之间的间距
+        /// </summary>
+        [Header("单元格间距")]
+        public float CellSpace = 10.0f;
+
+        /// <summary>
+        /// Is using correct effect(always stop at specific cell index after scrolling stop)
         /// 单元格位置矫正效果(矫正效果不支持容器内Cell单元格大小不同的情况)
         /// </summary>
         [Header("单元格位置矫正开关")]
         public bool CorrectCellPostionSwitch = false;
 
         /// <summary>
+        /// The thredhold velocity to trigger correct cell
         /// 矫正速度阈值
         /// </summary>
         [Header("矫正速度阈值")]
         public float CorrectVelocityThredHold = 50f;
 
         /// <summary>
+        /// Correct cell animation time
         /// 矫正时间(矫正时间越短速度越快)
         /// </summary>
         [Header("矫正时间")]
         public float CorrectCellTime = 0.5f;
 
         /// <summary>
+        /// Parent container that is used to bubble scroll event(in order to support nested scrollable container)
         /// 向上传递滚动事件的父滚动容器
         /// </summary>
         [Header("向上传递滚动事件的父滚动容器")]
-        public NewBaseContainer EventBubbleContainerParent = null;
+        public BaseScrollContainer EventBubbleContainerParent = null;
 
         /// <summary>
+        /// Container prefab data list
         /// 预制件数据源列表
         /// </summary>
         [Header("预制件数据源列表")]
         public List<GameObject> SourcePrefabList;
 
         /// <summary>
+        /// Parent scrollrect
         /// 向上传递滚动事件的父ScrollRect
         /// </summary>
         protected ScrollRect mEventBubbleScrollParent = null;
 
         /// <summary>
+        /// Conatiner Game Object Pool
         /// 单元格对象池
         /// </summary>
         public GameObjectPool CellGoPool
@@ -109,6 +135,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// ScrollRect Component
         /// 滚动组件
         /// </summary>
         public ScrollRect ScrollRect
@@ -118,6 +145,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Scroll Mask Rect
         /// 显示过滤框
         /// </summary>
         public Rect MaskRect
@@ -130,12 +158,18 @@ namespace TH.Modules.UI
         protected Rect mMaskRect;
 
         /// <summary>
+        /// Avalible Drag Direction
         /// 可拖拽的方向
         /// </summary>
         protected EDragDirection mAvalibleDragDirection;
 
         /// <summary>
+        /// Current Scroll Index Value
+        /// Note:
+        /// If using grid container, this value is only caculated for first row or first colume cell
         /// 当前滚动到的索引值(当前滚动到的准确单元索引值)
+        /// Note:
+        /// 如果是使用网格容器，当前滚动值只会计算第一行或第一列的偏移滚动值
         /// </summary>
         public float CurrentScrollIndexValue
         {
@@ -144,16 +178,19 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Root RectTransform
         /// 根节点Rect信息
         /// </summary>
         protected RectTransform mRootRectContentTrasform;
 
         /// <summary>
+        /// Content Transform
         /// 子节点(包含所有Cell的显示)
         /// </summary>
         protected Transform mRectContent;
 
         /// <summary>
+        /// Content RectTransform
         /// 子节点Rect信息(根据Cell大小变化)
         /// </summary>
         public RectTransform RectContentTrasform
@@ -163,84 +200,118 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Cell Data that is used to create cells
         /// Cell数据，用于创建Cell
         /// </summary>
-        protected List<NewCellData> mCellDatas;
+        protected List<CellData> mCellDatas;
 
         /// <summary>
+        /// Is under correct behaviour
         /// 是否正在矫正滚动
         /// </summary>
         protected bool mIsCorrectScrolling;
 
         /// <summary>
+        /// Current scroll direction
         /// 当前滚动方向
         /// </summary>
         protected EScrollDir mCurrentScrollDir;
 
         /// <summary>
+        /// Is drag end
         /// 是否结束拖拽(结束拖拽后才允许矫正判定)
         /// </summary>
         protected bool mIsEndDrag;
 
         /// <summary>
+        /// MoveToIndex Tweener
         /// 单元格移动Tweener
         /// </summary>
         protected Tweener mCellMoveToTweener;
 
         /// <summary>
+        /// Max scrollable distance
         /// 最大可滚动的距离
         /// </summary>
         protected float mAvalibleScrollDistance;
 
         /// <summary>
+        /// Is bubbling event up
         /// 是否正在传递事件
         /// </summary>
         protected bool mIsDistaching = false;
 
         /// <summary>
+        /// Is triggered awake
         /// 是否执行过Awake
         /// </summary>
         protected bool mIsAwakeComplete = false;
 
         /// <summary>
+        /// Is correct container data completed(In order to complete auto size setting off root recttransform)
         /// 数据矫正完成(为了支持自适应的父节点)
         /// </summary>
         protected bool mIsCorrectDataComplete = false;
 
         /// <summary>
+        /// Scroll Anchor Position
         /// 滚动锚点位置
         /// </summary>
         protected Vector2 mScrollAnchorPosition;
 
         /// <summary>
+        /// Current Move To Cel  Index(Its valide when MoveToIndex called or correct cell triggered)
         /// 当前滚动到的单元格索引值(只在MoveToIndex和矫正到指定位置时有效,请勿使用)
         /// </summary>
         protected int CurrentMoveToCellIndex;
 
         /// <summary>
+        /// Cell OnShow Delegate
         /// 单元格容器单元格显示回调
         /// </summary>
         protected Action<int, GameObject> mOnShowDelegate;
 
         /// <summary>
+        /// Visible Cell Scroll Delegate(delegate that is triggered when the cell first time visible in content)
         /// 单元格容器单元格滚动回调
         /// </summary>
-        protected Action<int, GameObject, float> mOnVisibleScrollDelegate;
+        protected Action<int, GameObject, float, float> mOnVisibleScrollDelegate;
 
         /// <summary>
+        /// Container Move To Specific Index Delegate(delegate that is called when MoToIndex called or correct cell behaviour completed)
         /// 单元格容器滚动到指定索引单元格回调(矫正和调用MoveToIndex的时候会触发)
         /// </summary>
         protected Action<int, GameObject> mMoveToIndexDelegate;
 
         /// <summary>
+        /// Cell OnHide Delegate(delegate that is triggered When the cell fist time invisible in content)
         /// 单元格容器单元格隐藏回调
         /// </summary>
         protected Action<int, GameObject> mOnHideDelegate;
 
         /// <summary>
+        /// The max correct cell index value
         /// 最大矫正到单元格索引(仅当开启矫正时有用)
         /// </summary>
         protected int mMaxCorrectToCellIndex;
+
+        /// <summary>
+        /// Cell prefabs size info list
+        /// 单元格模板大小信息列表
+        /// </summary>
+        protected List<Vector2> mCellTemplateSizeList;
+
+        /// <summary>
+        /// Cell prefgabs instance id info list
+        /// 单元格模板InstanceID列表
+        /// </summary>
+        protected List<int> mCellTemplateInstanceIDList;
+
+        /// <summary>
+        /// Offset Position between Center of content and first cell position
+        /// 中心点位置偏移
+        /// </summary>
+        protected Vector2 mCenterPositionOffset;
 
         public virtual void Awake()
         {
@@ -281,6 +352,7 @@ namespace TH.Modules.UI
             CurrentMoveToCellIndex = -1;
             mMoveToIndexDelegate = null;
             mMaxCorrectToCellIndex = -1;
+            initPrefabTemplateInfo();
         }
 
         // Use this for initialization
@@ -290,8 +362,25 @@ namespace TH.Modules.UI
             TryCorrectData();
         }
 
+        /// <summary>
+        /// Init prefab relative info
+        /// 初始化预制件大小信息
+        /// </summary>
+        protected void initPrefabTemplateInfo()
+        {
+            mCellTemplateSizeList = new List<Vector2>();
+            mCellTemplateInstanceIDList = new List<int>();
+            for (int i = 0, length = SourcePrefabList.Count; i < length; i++)
+            {
+                var prefabsize = SourcePrefabList[i].GetComponent<RectTransform>().rect.size;
+                mCellTemplateSizeList.Add(prefabsize);
+                mCellTemplateInstanceIDList.Add(SourcePrefabList[i].GetInstanceID());
+            }
+        }
+
 #if UNITY_EDITOR
         /// <summary>
+        /// Reset correct data status(In order to support editor container create cell simulation working)
         /// 重置矫正状态(为了支持编辑器模拟能够每次模拟都走正常流程)
         /// Note:
         /// 编辑器模拟前调用此方法，然后再调用Awake和Start方法
@@ -304,6 +393,7 @@ namespace TH.Modules.UI
 #endif
 
         /// <summary>
+        /// Correct Container Data(Only trigger once)
         /// 矫正数据(只矫正一次)
         /// </summary>
         protected void TryCorrectData()
@@ -318,6 +408,7 @@ namespace TH.Modules.UI
                     mMaskRect.width = mRootRectContentTrasform.rect.width;
                     mMaskRect.height = mRootRectContentTrasform.rect.height;
                     mIsCorrectDataComplete = true;
+                    initCenterPositionOffset();
                 }
                 else
                 {
@@ -325,6 +416,12 @@ namespace TH.Modules.UI
                 }
             }
         }
+
+        /// <summary>
+        /// Initialization for Center Position Offset
+        /// 初始化中心位置偏移
+        /// </summary>
+        protected abstract void initCenterPositionOffset();
 
         protected void OnEnable()
         {
@@ -353,12 +450,14 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Change scrollable status
         /// 改变可滚动状态
         /// </summary>
         /// <param name="isenable"></param>
         public abstract void changeScrollable(bool isenable);
 
         /// <summary>
+        /// Move to specific index
         /// 移动到特定Cell单元格位置
         /// </summary>
         /// <param name="index">Cell Index</param>
@@ -370,13 +469,14 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Bind container delegate
         /// 绑定单元格回调(此方法在使用单元格前比调)
         /// </summary>
         /// <param name="onshow"></param>
         /// <param name="onhide"></param>
         /// <param name="onvisiblescroll"></param>
         /// <param name="onmoveto"></param>
-        public void bindContainerCallBack(Action<int, GameObject> onshow, Action<int, GameObject> onhide = null, Action<int, GameObject, float> onvisiblescroll = null, Action<int, GameObject> onmoveto = null)
+        public void bindContainerCallBack(Action<int, GameObject> onshow, Action<int, GameObject> onhide = null, Action<int, GameObject, float, float> onvisiblescroll = null, Action<int, GameObject> onmoveto = null)
         {
             mOnShowDelegate = onshow;
             mOnVisibleScrollDelegate = onvisiblescroll;
@@ -385,6 +485,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Unbind container delegate
         /// 解除绑定单元格回调(一般不需要手动调用)
         /// </summary>
         public void unbindContainerCallBack()
@@ -396,6 +497,55 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Get prefab gameobject with prefab index
+        /// 获取指定预制件索引的单元格模板
+        /// </summary>
+        /// <param name="prefabindex"></param>
+        /// <returns></returns>
+        public GameObject getPrefabTemplateWithPrefabIndex(int prefabindex)
+        {
+            Debug.Assert(prefabindex < SourcePrefabList.Count, $"预制件索引:{prefabindex}超出最大预制件数量设置:{SourcePrefabList.Count},获取对应预制件模板失败!");
+            return SourcePrefabList[prefabindex];
+        }
+
+        /// <summary>
+        /// Get prefab size with prefab index
+        /// 获取指定预制件索引的单元格大小信息
+        /// </summary>
+        /// <param name="prefabindex"></param>
+        /// <returns></returns>
+        public Vector2 getPrefabTemplateSizeWithPrefabIndex(int prefabindex)
+        {
+            Debug.Assert(prefabindex < SourcePrefabList.Count, $"预制件索引:{prefabindex}超出最大预制件数量设置:{SourcePrefabList.Count},获取对应预制件模板大小失败!");
+            return mCellTemplateSizeList[prefabindex];
+        }
+
+        /// <summary>
+        /// Get prefab size with cell index
+        /// 获取指定预制件索引的单元格大小信息
+        /// </summary>
+        /// <param name="cellindex"></param>
+        /// <returns></returns>
+        public Vector2 getPrefabTemplateSizeWithCellIndex(int cellindex)
+        {
+            Debug.Assert(cellindex < mCellDatas.Count, $"单元格索引:{cellindex}超出最大单元格数量设置:{mCellDatas.Count},获取对应预制件模板大小失败!");            
+            return getPrefabTemplateSizeWithPrefabIndex(mCellDatas[cellindex].CellPrefabIndex);
+        }
+
+        /// <summary>
+        /// Get prefab instance id with prefab index
+        /// 获取指定预制件索引的单元格InstanceID
+        /// </summary>
+        /// <param name="prefabindex"></param>
+        /// <returns></returns>
+        public int getPrefabTemplateInstanceIDWithPrefabIndex(int prefabindex)
+        {
+            Debug.Assert(prefabindex < SourcePrefabList.Count, $"预制件索引:{prefabindex}超出最大预制件数量设置:{SourcePrefabList.Count},获取对应预制件模板InstanceID失败!");
+            return mCellTemplateInstanceIDList[prefabindex];
+        }
+
+        /// <summary>
+        /// Set container celldatas by pass data
         /// 设置Container的cell数据通过列表数据
         /// </summary>
         /// <param name="prefabindexlist">预制件索引列表</param>
@@ -408,6 +558,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Set container celldatas by pass cell count
         /// 设置Container的cell数据通过单元格数量
         /// </summary>
         /// <param name="prefabindexlist">预制件索引列表</param>
@@ -420,11 +571,12 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Set container celldatas by pass celldata list
         /// 设置Container的cell数据
         /// </summary>
         /// <param name="celldatas">所有的Cell数据</param>
         /// <param name="scrollnormalizedposition">单元格初始滚动位置</param>
-        public void setCellDatas(List<NewCellData> celldatas, Vector2? scrollnormalizedposition = null)
+        public void setCellDatas(List<CellData> celldatas, Vector2? scrollnormalizedposition = null)
         {
             // 为了支持比容器先进入Start执行数据设置的情况
             if (mIsCorrectDataComplete == false)
@@ -448,6 +600,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Clear cell datas
         /// 清除单元格数据
         /// Note:
         /// 嵌套单元格容器进池前必须调用此函数，否则会造成滚动过程中入对象池出对象池后带来的各种问题
@@ -482,6 +635,17 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Get total number of cells
+        /// 获取总的单元格数量
+        /// </summary>
+        /// <returns></returns>
+        public int getCellTotalCount()
+        {
+            return mCellDatas != null ? mCellDatas.Count : 0;
+        }
+
+        /// <summary>
+        /// Get current scroll position(0 -- 1)
         /// 获取滚动进度
         /// </summary>
         /// <returns></returns>
@@ -491,11 +655,12 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Get cell data with index
         /// 获取指定索引位置的单元格
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public NewCellData getCellDataWithIndex(int index)
+        public CellData getCellDataWithIndex(int index)
         {
             if (mCellDatas != null && index >= 0 && index < mCellDatas.Count)
             {
@@ -508,12 +673,13 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Add celldata with index
         /// 指定位子添加单元格数据
         /// </summary>
         /// <param name="celldata">需要添加的单元格</param>
         /// <param name="index">单元格添加位置索引</param>
         /// <returns></returns>
-        public bool addCellDataWithIndex(NewCellData celldata, int index = 0)
+        public bool addCellDataWithIndex(CellData celldata, int index = 0)
         {
             Debug.Assert(celldata != null, "不允许添加空的单元格数据!");
             var maxindex = ((mCellDatas != null) ? mCellDatas.Count : 0);
@@ -522,7 +688,7 @@ namespace TH.Modules.UI
                 forceScrollStop();
                 if (mCellDatas == null)
                 {
-                    mCellDatas = new List<NewCellData>();
+                    mCellDatas = new List<CellData>();
                 }
                 mCellDatas.Insert(index, celldata);
                 forceUpdateDisplay();
@@ -536,27 +702,59 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Add celldata list with index
+        /// 指定位子添加单元格数据列表
+        /// </summary>
+        /// <param name="celldatalist">需要添加的单元格信息列表</param>
+        /// <param name="index">单元格添加位置索引</param>
+        /// <returns></returns>
+        public bool addCellDataListWithIndex(List<CellData> celldatalist, int index = 0)
+        {
+            Debug.Assert(celldatalist != null, "不允许添加空的单元格数据列表!");
+            var maxindex = ((mCellDatas != null) ? mCellDatas.Count : 0);
+            if (index >= 0 && index <= maxindex)
+            {
+                forceScrollStop();
+                if (mCellDatas == null)
+                {
+                    mCellDatas = new List<CellData>();
+                }
+                mCellDatas.InsertRange(index, celldatalist);
+                forceUpdateDisplay();
+                return true;
+            }
+            else
+            {
+                Debug.LogError($"无效的索引位置:{index},有效范围0-{maxindex},添加单元格列表失败!");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Add celldata to beginning
         /// 添加单元格数据到头部
         /// </summary>
         /// <param name="celldata">需要添加到头部的单元格</param>
         /// <returns></returns>
-        public bool addCellDataToStart(NewCellData celldata)
+        public bool addCellDataToStart(CellData celldata)
         {
             return addCellDataWithIndex(celldata, 0);
         }
 
         /// <summary>
+        /// Add celldata to end
         /// 添加单元格数据到尾部
         /// </summary>
         /// <param name="celldata">需要添加到尾部的单元格</param>
         /// <returns></returns>
-        public bool addCellDataToEnd(NewCellData celldata)
+        public bool addCellDataToEnd(CellData celldata)
         {
             var maxindex = ((mCellDatas != null) ? mCellDatas.Count : 0);
             return addCellDataWithIndex(celldata, maxindex);
         }
 
         /// <summary>
+        /// Delete celldata with index
         /// 删除指定位子单元格
         /// </summary>
         /// <param name="index">单元格移除位置索引</param>
@@ -588,6 +786,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Get container size
         /// 获取整个滚动容器的大小
         /// </summary>
         /// <returns></returns>
@@ -597,6 +796,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Force update display
         /// 强制容器刷新显示(包含数据更新和显示刷新，显示更新仅当已经触发显示的情况下)
         /// </summary>
         /// <returns></returns>
@@ -609,6 +809,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Refresh all celld display
         /// 刷新显示所有Cell(用于只触发刷新逻辑 e.g. BaseCell:OnShow())
         /// </summary>
         public void refreshDisplay()
@@ -617,20 +818,13 @@ namespace TH.Modules.UI
             {
                 for (int i = 0; i < mCellDatas.Count; i++)
                 {
-                    // 只刷新可见的单元格
-                    if (mCellDatas[i].isVisible())
-                    {
-                        if(mCellDatas[i].CellGO != null)
-                        {
-                            onCellShow(i);
-                        }
-                        onCellVisibleScroll(i, CurrentScrollIndexValue);
-                    }
+                    onCellDisplay(i);
                 }
             }
         }
 
         /// <summary>
+        /// On begin drag
         /// 响应开始拖拽
         /// </summary>
         /// <param name="eventData"></param>
@@ -658,6 +852,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// On drag
         /// 响应拖拽
         /// </summary>
         /// <param name="eventData"></param>
@@ -683,6 +878,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// On end drag
         /// 响应结束拖拽
         /// </summary>
         /// <param name="eventData"></param>
@@ -705,17 +901,20 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Display all celldatas
         /// 显示更新所有Cell
         /// </summary>
         /// <param name="forcerefreshcellsize">是否强制刷新单元格大小</param>
         protected abstract void display(bool forcerefreshcellsize = false);
 
         /// <summary>
+        /// Update scrollable status
         /// 更新可滚动状态
         /// </summary>
         public abstract void updateScrollable();
         
         /// <summary>
+        /// Execute begin drag
         /// 执行开始拖拽
         /// </summary>
         /// <param name="eventData"></param>
@@ -734,6 +933,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Execute on drag
         /// 执行拖拽
         /// </summary>
         /// <param name="eventData"></param>
@@ -743,6 +943,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Execute end drag
         /// 执行结束拖拽
         /// </summary>
         /// <param name="eventData"></param>
@@ -755,6 +956,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Is bubbling event up to parent
         /// 是否应该转发本次事件传递至父级
         /// </summary>
         protected bool shouldBubblehEvent(PointerEventData eventData)
@@ -788,6 +990,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Detect move direction
         /// 计算手势移动方向
         /// </summary>
         protected MoveDirection determineMoveDirection(float x, float y, float deadZone)
@@ -808,6 +1011,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Force stop scrolling
         /// 强制停止滚动移动
         /// </summary>
         protected virtual void forceScrollStop()
@@ -819,6 +1023,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Check whether trigger correct cell behaviour
         /// 检查单元格位置矫正(子类重写去支持自定义矫正)
         /// </summary>
         /// <param name="scrolldir"></param>
@@ -831,6 +1036,7 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Update container relative datas
         /// 更新容器数据
         /// </summary>
         /// <param name="scrollnormalizaedposition">单元格初始滚动位置</param>
@@ -838,23 +1044,43 @@ namespace TH.Modules.UI
         protected abstract void updateContainerData(Vector2? scrollnormalizaedposition = null, bool keeprectcontentpos = false);
 
         /// <summary>
+        /// Update max correct cell index
         /// 更新最大矫正到单元格索引值
         /// </summary>
         protected abstract void updateMaxCorrectToCellIndex();
 
         /// <summary>
+        /// Get specific cell index center position offset
+        /// 获取指定单元格离中心点位置的偏移
+        /// </summary>
+        /// <param name="currentscrollabspos"></param>
+        /// <param name="cellindex"></param>
+        /// <returns></returns>
+        protected abstract float getCellCenterPositionOffset(float currentscrollabspos, int cellindex);
+
+        /// <summary>
+        /// Get Current Scroll Position
+        /// 获取当前滚动到的位置
+        /// </summary>
+        /// <returns></returns>
+        protected abstract float getCurrentScrollPosition();
+
+        /// <summary>
+        /// Update scroll direction
         /// 更新滚动方向数据
         /// </summary>
         /// <param name="eventData"></param>
         public abstract void updateScrollDir(PointerEventData eventData);
 
         /// <summary>
+        /// On scrolling
         /// 响应滚动
         /// </summary>
         /// <param name="scrollpos"></param>
         protected abstract void onScrollChanged(Vector2 scrollpos);
 
         /// <summary>
+        /// On pointer exit
         /// 响应点击退出
         /// </summary>
         /// <param name="eventData"></param>
@@ -865,12 +1091,12 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// On cell display
         /// 单元格显示判定
         /// </summary>
         /// <param name="index"></param>
-        /// <param name="scrollindexvalue">当前滚动索引节点值</param>
         /// <param name="forcerefreshcellsize">是否强制刷新单元格大小</param>
-        protected virtual void onCellDisplay(int index, float scrollindexvalue, bool forcerefreshcellsize = false)
+        protected virtual void onCellDisplay(int index, bool forcerefreshcellsize = false)
         {
             if (!mCellDatas[index].isVisible())
             {
@@ -887,26 +1113,50 @@ namespace TH.Modules.UI
                 }
                 if (!mCellDatas[index].CellGO)
                 {
-                    onCellShow(index);
+                    onCellInit(index);
                 }
-                onCellVisibleScroll(index, scrollindexvalue);
+                onCellShow(index);
+                var currentscrollpos = getCurrentScrollPosition();
+                //统一换算成正的偏移位置，方便统一正向和逆向的滚动计算
+                currentscrollpos = Mathf.Abs(currentscrollpos);
+                var cellcenteroffsetposition = getCellCenterPositionOffset(currentscrollpos, index);
+                onCellVisibleScroll(index, CurrentScrollIndexValue, cellcenteroffsetposition);
             }
         }
 
         /// <summary>
+        /// On Cell Initialization
+        /// 响应单元格第一次初始化
+        /// </summary>
+        /// <param name="index"></param>
+        protected virtual void onCellInit(int index)
+        {
+            if (mCellDatas[index].CellGO == null)
+            {
+                var cellprefabtemplate = getPrefabTemplateWithPrefabIndex(mCellDatas[index].CellPrefabIndex);
+                var cellgo = CellGoPool != null ? CellGoPool.pop(cellprefabtemplate) : GameObject.Instantiate(cellprefabtemplate);
+                cellgo.transform.SetParent(RectContentTrasform, false);
+                mCellDatas[index].init(cellgo);
+            }
+            else
+            {
+                Debug.LogError($"单元格索引:{index}实例对象不为空,不应该进入这里!");
+            }
+        }
+
+        /// <summary>
+        /// On cell show
         /// 响应单元格显示
         /// </summary>
         /// <param name="index"></param>
         protected virtual void onCellShow(int index)
         {
-            var cellgo = CellGoPool != null ? CellGoPool.pop(mCellDatas[index].CellPrefab) : GameObject.Instantiate(mCellDatas[index].CellPrefab);
-            cellgo.transform.SetParent(RectContentTrasform, false);
-            mCellDatas[index].init(cellgo);
             // OnShow逻辑
             mOnShowDelegate?.Invoke(index, mCellDatas[index].CellGO);
         }
 
         /// <summary>
+        /// On cell hide
         /// 响应单元格隐藏
         /// </summary>
         /// <param name="index"></param>
@@ -914,7 +1164,8 @@ namespace TH.Modules.UI
         {
             if (CellGoPool != null)
             {
-                CellGoPool.push(mCellDatas[index].CellPrefabInstanceID, mCellDatas[index].CellGO);
+                var cellprefabinstanceid = getPrefabTemplateInstanceIDWithPrefabIndex(mCellDatas[index].CellPrefabIndex);
+                CellGoPool.push(cellprefabinstanceid, mCellDatas[index].CellGO);
             }
             else
             {
@@ -938,17 +1189,20 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// On cell visible scroll
         /// 响应单元格可见滚动
         /// </summary>
         /// <param name="index">单元格索引</param>
-        /// <param name="scrollindexvalue">当前滚动到的单元格索引值</param>
-        protected virtual void onCellVisibleScroll(int index, float scrollindexvalue)
+        /// <param name="currentscrollindexvalue">当前滚动到的单元格索引值</param>
+        /// <param name="centeroffsetposition">当前单元格离中心点位置偏移</param>
+        protected virtual void onCellVisibleScroll(int index, float currentscrollindexvalue, float centeroffsetposition)
         {
             // onVisibleScroll单元格可见滚动逻辑
-            mOnVisibleScrollDelegate?.Invoke(index, mCellDatas[index].CellGO, scrollindexvalue);
+            mOnVisibleScrollDelegate?.Invoke(index, mCellDatas[index].CellGO, currentscrollindexvalue, centeroffsetposition);
         }
 
         /// <summary>
+        /// On cell clear
         /// 响应单元格清理
         /// </summary>
         /// <param name="index"></param>
@@ -964,64 +1218,68 @@ namespace TH.Modules.UI
             mCellDatas[index].clear();
         }
 
-        #region 创建单元格数据接口
+        #region Create Cell Datas API(创建单元格数据接口)
         /// <summary>
-        /// 创建NewCellData方法
+        /// Create celldata
+        /// 创建CellData方法
         /// </summary>
         /// <param name="prefabindex">预制件索引</param>
         /// <param width="size">单元格大小</param>
         /// <returns></returns>
-        public NewCellData createNormalCellData(int prefabindex = 0, Vector2? size = null)
+        public CellData createNormalCellData(int prefabindex = 0, Vector2? size = null)
         {
             if (prefabindex >= SourcePrefabList.Count)
             {
                 Debug.LogError($"容器:{gameObject.name}单元格数据总数量:{SourcePrefabList.Count},预制件索引:{prefabindex}超出范围!");
                 return null;
             }
-            var cell = ObjectPool.Singleton.pop<NewCellData>();
-            cell.setData(SourcePrefabList[prefabindex], this, size);
+            var cell = ObjectPool.Singleton.pop<CellData>();
+            cell.setData(prefabindex, this, size);
             return cell;
         }
 
         /// <summary>
-        /// 创建NewCellData方法列表(优化CreateNormalCellData调用多次问题)
+        /// Create celldata list by pass cell info
+        /// 创建CellData方法列表(优化CreateNormalCellData调用多次问题)
         /// </summary>
         /// <param name="prefabindexlist">预制件索引列表</param>
         /// <param width="cellsizelist">单元格大小列表(为空表示采用预制件默认大小)</param>
         /// <returns></returns>
-        public List<NewCellData> createNormalCellDataList(List<int> prefabindexlist, List<Vector2> cellsizelist = null)
+        public List<CellData> createNormalCellDataList(List<int> prefabindexlist, List<Vector2> cellsizelist = null)
         {
             if(cellsizelist != null)
             {
                 Debug.Assert(prefabindexlist.Count == cellsizelist.Count, $"如果单元格大小不为空，那么单元格大小数据列表必须和预制件索引列表长度一致!");
             }
-            var celldatalist = new List<NewCellData>();
+            var celldatalist = new List<CellData>();
             for(int i = 0, length = prefabindexlist.Count; i < length; i++)
             {
-                if (i >= SourcePrefabList.Count)
+                var prefabindex = prefabindexlist[i];
+                if (prefabindex >= SourcePrefabList.Count)
                 {
-                    Debug.LogError($"容器:{gameObject.name}单元格数据总数量:{SourcePrefabList.Count},预制件索引:{prefabindexlist[i]}超出范围!");
+                    Debug.LogError($"容器:{gameObject.name}单元格数据总数量:{SourcePrefabList.Count},预制件索引:{prefabindex}超出范围!");
                     return null;
                 }
-                var cell = ObjectPool.Singleton.pop<NewCellData>();
+                var cell = ObjectPool.Singleton.pop<CellData>();
                 Vector2? sizevalue = null;
                 if(cellsizelist != null)
                 {
                     sizevalue = cellsizelist[i];
                 }
-                cell.setData(SourcePrefabList[i], this, sizevalue);
+                cell.setData(prefabindex, this, sizevalue);
                 celldatalist.Add(cell);
             }
             return celldatalist;
         }
 
         /// <summary>
-        /// 创建NewCellData方法列表(优化CreateNormalCellData调用多次问题)
+        /// Create celldata list by pass cell total number
+        /// 创建CellData方法列表(优化CreateNormalCellData调用多次问题)
         /// </summary>
         /// <param name="cellcount">单元格数量(默认全部用第一个预制件)</param>
         /// <param width="cellsizelist">单元格大小列表(为空表示采用预制件默认大小)</param>
         /// <returns></returns>
-        public List<NewCellData> createNormalCellDataListWithCount(int cellcount, List<Vector2> cellsizelist = null)
+        public List<CellData> createNormalCellDataListWithCount(int cellcount, List<Vector2> cellsizelist = null)
         {
             if (cellsizelist != null)
             {
@@ -1029,19 +1287,19 @@ namespace TH.Modules.UI
             }
             if (SourcePrefabList.Count == 0)
             {
-                Debug.LogError($"容器:{gameObject.name}单元格数据总数量:{SourcePrefabList.Count}不能为0!");
+                Debug.LogError($"容器:{gameObject.name}预制件总数量:{SourcePrefabList.Count}不能为0!");
                 return null;
             }
-            var celldatalist = new List<NewCellData>();
+            var celldatalist = new List<CellData>();
             for (int i = 0; i < cellcount; i++)
             {
-                var cell = ObjectPool.Singleton.pop<NewCellData>();
+                var cell = ObjectPool.Singleton.pop<CellData>();
                 Vector2? sizevalue = null;
                 if (cellsizelist != null)
                 {
                     sizevalue = cellsizelist[i];
                 }
-                cell.setData(SourcePrefabList[0], this, sizevalue);
+                cell.setData(0, this, sizevalue);
                 celldatalist.Add(cell);
             }
             return celldatalist;

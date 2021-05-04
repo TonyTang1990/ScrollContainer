@@ -38,13 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 0
+  m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -150,8 +150,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7de22adb38a5281478e8db3cb3b292c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIRoot: {fileID: 1479462089172672724}
-  UIParent: {fileID: 1479462089172672723}
 --- !u!4 &77177092
 Transform:
   m_ObjectHideFlags: 0
@@ -268,7 +266,6 @@ GameObject:
   m_Component:
   - component: {fileID: 534669905}
   - component: {fileID: 534669904}
-  - component: {fileID: 534669903}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -276,14 +273,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &534669903
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 534669902}
-  m_Enabled: 1
 --- !u!20 &534669904
 Camera:
   m_ObjectHideFlags: 0
@@ -413,12 +402,6 @@ PrefabInstance:
 --- !u!224 &1479462089172672723 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1479462087578748183, guid: fa229c1dbbd0fa043a906aed02031dc8,
-    type: 3}
-  m_PrefabInstance: {fileID: 1479462089172672722}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1479462089172672724 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1479462088219676696, guid: fa229c1dbbd0fa043a906aed02031dc8,
     type: 3}
   m_PrefabInstance: {fileID: 1479462089172672722}
   m_PrefabAsset: {fileID: 0}
@@ -903,6 +886,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4133400480630073035, guid: 7f1241d865e7a6647b4b28b0b6c495fe,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -49.999756
       objectReference: {fileID: 0}
     - target: {fileID: 4133400480670085791, guid: 7f1241d865e7a6647b4b28b0b6c495fe,
         type: 3}

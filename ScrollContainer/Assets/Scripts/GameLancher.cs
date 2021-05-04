@@ -30,8 +30,10 @@ public class GameLancher : MonoBehaviour
         {
             Debug.LogError($"重复挂载GameLancher脚本,请检查代码!");
         }
-        DontDestroyOnLoad(gameObject);
     }
 
-
+    void OnDestroy()
+    {
+        Singleton = null;
+    }
 }

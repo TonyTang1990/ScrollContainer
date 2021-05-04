@@ -1,5 +1,5 @@
 ﻿/*
- * Description:             NewHorizontalContainer.cs
+ * Description:             HorizontalScrollContainer.cs
  * Author:                  TONYTANG
  * Create Date:             2019/07/15
  */
@@ -14,9 +14,10 @@ namespace TH.Modules.UI
     /// <summary>
     /// 横向滚动容器抽象
     /// </summary>
-    public class NewHorizontalContainer : NewBaseContainer
+    public class HorizontalScrollContainer : BaseScrollContainer
     {
         /// <summary>
+        /// Container Layout Direction Enum
         /// 排版方向
         /// </summary>
         public enum EHorizontalLayoutDirection
@@ -26,20 +27,11 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Horizontal Container Layout Direction
         /// 排版方向
         /// </summary>
         [Header("排版方向(不允许动态修改)")]
         public EHorizontalLayoutDirection LayoutDirection = EHorizontalLayoutDirection.LeftToRight;
-        
-        /// <summary>
-        /// 起始位置偏移(含水平和垂直)
-        /// </summary>
-        public Vector2 BeginOffset = Vector2.one * 10;
-
-        /// <summary>
-        /// Cell单元格之间的间距
-        /// </summary>
-        public float CellSpace = 10.0f;
 
         /// <summary>
         /// 是否是逆向
@@ -59,9 +51,8 @@ namespace TH.Modules.UI
             RectContentTrasform.anchorMax = mScrollAnchorPosition;
             RectContentTrasform.anchorMin = mScrollAnchorPosition;
             RectContentTrasform.anchoredPosition = Vector2.zero;
-
         }
-        
+
         /// <summary>
         /// 改变可滚动状态
         /// </summary>
@@ -107,6 +98,16 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// Initialization for Center Position Offset
+        /// 初始化中心位置偏移
+        /// </summary>
+        protected override void initCenterPositionOffset()
+        {
+            mCenterPositionOffset.x = RectContentTrasform.rect.size.x / 2 - BeginOffset.x;
+            mCenterPositionOffset.y = 0;
+        }
+
+        /// <summary>
         /// 矫正MoveToIndex
         /// </summary>
         /// <param name="index"></param>
@@ -136,7 +137,7 @@ namespace TH.Modules.UI
                 mMaskRect.x = mAvalibleScrollDistance * ScrollRect.horizontalNormalizedPosition;
                 for (int i = 0; i < mCellDatas.Count; i++)
                 {
-                    onCellDisplay(i, CurrentScrollIndexValue, forcerefreshcellsize);
+                    onCellDisplay(i, forcerefreshcellsize);
                 }
             }
         }
@@ -225,7 +226,7 @@ namespace TH.Modules.UI
                 cellmaskbenginoffset.x += mIsReverse == false ? mCellDatas[i].getSize().x : -mCellDatas[i].getSize().x;
             }
             // 强制更新最新的滚动索引位置
-            CurrentScrollIndexValue = getCurrentScrollIndexValue();
+            updateScrollValue();
             updateScrollable();
         }
 
@@ -240,9 +241,9 @@ namespace TH.Modules.UI
                 for (int i = 0, length = mCellDatas != null ? mCellDatas.Count : 0; i < length; i++)
                 {
                     var cellabspos = mCellDatas[i].getAbsPos();
-                    if (cellabspos.x - BeginOffset.x > maxscrolloffset)
+                    if (cellabspos.x - BeginOffset.x >= maxscrolloffset)
                     {
-                        mMaxCorrectToCellIndex = i - 1;
+                        mMaxCorrectToCellIndex = i;
                         break;
                     }
                 }
@@ -262,11 +263,11 @@ namespace TH.Modules.UI
         {
             if (mCellDatas != null)
             {
-                CurrentScrollIndexValue = getCurrentScrollIndexValue();
+                updateScrollValue();
                 mMaskRect.x = mAvalibleScrollDistance * ScrollRect.horizontalNormalizedPosition;
                 for (int i = 0; i < mCellDatas.Count; i++)
                 {
-                    onCellDisplay(i, CurrentScrollIndexValue);
+                    onCellDisplay(i);
                 }
                 checkCellPostionCorrect(mCurrentScrollDir);
             }
@@ -301,52 +302,98 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
-        /// 获取当前滚动单元格索引值
+        /// Get specific cell index center position offset
+        /// 获取指定单元格离中心点位置的偏移
+        /// </summary>
+        /// <param name="currentscrollabspos"></param>
+        /// <param name="celldata"></param>
+        /// <returns></returns>
+        protected override float getCellCenterPositionOffset(float currentscrollabspos, int cellindex)
+        {
+            var celldata = getCellDataWithIndex(cellindex);
+            // 单元格离中心点的偏移 = 当前滚动到的位置 + 中心点位置偏移 - 单元格位置 - 单元格大小 / 2
+            var cellposition = celldata.getAbsPos();
+            var cellsize = celldata.getSize();
+            return currentscrollabspos + mCenterPositionOffset.x - cellposition.x - cellsize.x / 2;            
+        }
+
+        /// <summary>
+        /// Get Current Scroll Position
+        /// 获取当前滚动到的位置
         /// </summary>
         /// <returns></returns>
-        protected virtual float getCurrentScrollIndexValue()
+        protected override float getCurrentScrollPosition()
         {
-            var scrollindex = 0f;
+            if (mIsReverse == false)
+            {
+                return mAvalibleScrollDistance * ScrollRect.horizontalNormalizedPosition + BeginOffset.x;
+            }
+            else
+            {
+                return -mAvalibleScrollDistance * (1 - ScrollRect.horizontalNormalizedPosition) - BeginOffset.x;
+            }
+        }
+        /// <summary>
+        /// 更新滚动相关值
+        /// </summary>
+        /// <returns></returns>
+        protected virtual void updateScrollValue()
+        {
             if(mCellDatas != null)
             {
-                var currentscrollpos = 0f;
-                if (mIsReverse == false)
-                {
-                    currentscrollpos = mAvalibleScrollDistance * ScrollRect.horizontalNormalizedPosition + BeginOffset.x;
-                }
-                else
-                {
-                    currentscrollpos = -mAvalibleScrollDistance * (1 - ScrollRect.horizontalNormalizedPosition) - BeginOffset.x;
-                }
+                var currentscrollpos = getCurrentScrollPosition();
                 //统一换算成正的偏移位置，方便统一正向和逆向的滚动计算
                 currentscrollpos = Mathf.Abs(currentscrollpos);
+                CurrentScrollIndexValue = getSpecificScrollPositonScrollIndex(currentscrollpos);
+            }
+            else
+            {
+                CurrentScrollIndexValue = 0f;
+            }
+        }
+
+        /// <summary>
+        /// Get scroll index with specific scroll position
+        /// 获取指定滚动位置的单元格滚动索引值
+        /// </summary>
+        /// <param name="scrollposition"></param>
+        /// <returns></returns>
+        protected virtual float getSpecificScrollPositonScrollIndex(float scrollposition)
+        {
+            if (mCellDatas != null)
+            {
+                var scrollindex = 0f;
                 for (int i = 0, length = mCellDatas != null ? mCellDatas.Count : 0; i < length; i++)
                 {
                     if (i + 1 < length)
                     {
-                        if (currentscrollpos < mCellDatas[0].getAbsPos().x)
+                        if (scrollposition < mCellDatas[0].getAbsPos().x)
                         {
                             scrollindex = 0;
-                            scrollindex += ((currentscrollpos - mCellDatas[0].getAbsPos().x) / mCellDatas[0].getSize().x);
+                            scrollindex += ((scrollposition - mCellDatas[0].getAbsPos().x) / mCellDatas[0].getSize().x);
                             break;
                         }
-                        else if (currentscrollpos >= mCellDatas[i].getAbsPos().x && currentscrollpos <= mCellDatas[i + 1].getAbsPos().x)
+                        else if (scrollposition >= mCellDatas[i].getAbsPos().x && scrollposition <= mCellDatas[i + 1].getAbsPos().x)
                         {
                             scrollindex = i;
                             var celloffset = mCellDatas[i + 1].getAbsPos().x - mCellDatas[i].getAbsPos().x;
-                            scrollindex += ((currentscrollpos - mCellDatas[i].getAbsPos().x) / celloffset);
+                            scrollindex += ((scrollposition - mCellDatas[i].getAbsPos().x) / celloffset);
                             break;
                         }
                     }
                     else
                     {
                         scrollindex = length - 1;
-                        scrollindex += ((currentscrollpos - mCellDatas[length - 1].getAbsPos().x) / mCellDatas[length - 1].getSize().x);
+                        scrollindex += ((scrollposition - mCellDatas[length - 1].getAbsPos().x) / mCellDatas[length - 1].getSize().x);
                         break;
                     }
                 }
+                return scrollindex;
             }
-            return scrollindex;
+            else
+            {
+                return 0;
+            }
         }
 
         /// <summary>
