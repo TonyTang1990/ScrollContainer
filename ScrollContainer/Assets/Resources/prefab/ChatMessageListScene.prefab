@@ -76,7 +76,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "GridViewScene(\u7F51\u683C\u5355\u5143\u683C\u573A\u666F)"
+  m_Text: "ChatMessageListScene(\u804A\u5929\u5355\u5143\u683C\u573A\u666F)"
 --- !u!1 &6578348182650846688
 GameObject:
   m_ObjectHideFlags: 0
