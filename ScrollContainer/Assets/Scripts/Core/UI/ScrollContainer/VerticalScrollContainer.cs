@@ -22,8 +22,8 @@ namespace TH.Modules.UI
         /// </summary>
         public enum EVerticalLayoutDirection
         {
-            TopToBottom = 1,              // 从上往下
-            BottomToTop,                  // 从下往上
+            TopToBottom,              // 从上往下
+            BottomToTop,              // 从下往上
         }
 
         /// <summary>
@@ -43,9 +43,12 @@ namespace TH.Modules.UI
             base.Awake();
             mAvalibleDragDirection = EDragDirection.Vertical;
 
-            mScrollAnchorPosition = LayoutDirection == EVerticalLayoutDirection.TopToBottom ? new Vector2(0.0f, 1.0f) : new Vector2(0.0f, 0.0f);
+            // LayoutDirection == EVerticalLayoutDirection.TopToBottom
+            // new Vector2(0.0f, 1.0f) : new Vector2(0.0f, 0.0f);
+            var axis = (int) LayoutDirection;
+            mScrollAnchorPosition = new Vector2(0, axis ^ 1);
             // 如果方向是反向的话，当做逆向来处理计算单元格位置和大小
-            mIsReverse = LayoutDirection == EVerticalLayoutDirection.TopToBottom ? false : true;
+            mIsReverse = LayoutDirection != EVerticalLayoutDirection.TopToBottom;
 
             RectContentTrasform.pivot = mScrollAnchorPosition;
             RectContentTrasform.anchorMax = mScrollAnchorPosition;
@@ -60,7 +63,7 @@ namespace TH.Modules.UI
         public override void changeScrollable(bool isenable)
         {
             IsAllowedScroll = isenable;
-            ScrollRect.vertical = IsAllowedScroll ? true : false;
+            ScrollRect.vertical = IsAllowedScroll;
         }
 
         /// <summary>

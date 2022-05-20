@@ -138,23 +138,14 @@ namespace TH.Modules.UI
         /// ScrollRect Component
         /// 滚动组件
         /// </summary>
-        public ScrollRect ScrollRect
-        {
-            get;
-            protected set;
-        }
+        public ScrollRect ScrollRect { get; protected set; }
 
         /// <summary>
         /// Scroll Mask Rect
         /// 显示过滤框
         /// </summary>
-        public Rect MaskRect
-        {
-            get
-            {
-                return mMaskRect;
-            }
-        }
+        public Rect MaskRect => mMaskRect;
+
         protected Rect mMaskRect;
 
         /// <summary>
@@ -171,11 +162,7 @@ namespace TH.Modules.UI
         /// Note:
         /// 如果是使用网格容器，当前滚动值只会计算第一行或第一列的偏移滚动值
         /// </summary>
-        public float CurrentScrollIndexValue
-        {
-            get;
-            protected set;
-        }
+        public float CurrentScrollIndexValue { get; protected set; }
 
         /// <summary>
         /// Root RectTransform
@@ -193,11 +180,7 @@ namespace TH.Modules.UI
         /// Content RectTransform
         /// 子节点Rect信息(根据Cell大小变化)
         /// </summary>
-        public RectTransform RectContentTrasform
-        {
-            get;
-            protected set;
-        }
+        public RectTransform RectContentTrasform {  get; protected set; }
 
         /// <summary>
         /// Cell Data that is used to create cells
@@ -330,13 +313,9 @@ namespace TH.Modules.UI
                 mEventBubbleScrollParent = EventBubbleContainerParent.GetComponent<ScrollRect>();
             }
             mMaskRect = Rect.zero;
-            ScrollRect = gameObject.GetComponent<ScrollRect>();
-            if (ScrollRect == null)
-            {
-                ScrollRect = gameObject.AddComponent<ScrollRect>();
-            }
+            ScrollRect = this.GetComponent<ScrollRect>();
 
-            mRootRectContentTrasform = gameObject.transform.GetComponent<RectTransform>();
+            mRootRectContentTrasform = this.GetComponent<RectTransform>();
             mRectContent = gameObject.transform.GetChild(0);
             RectContentTrasform = mRectContent.GetComponent<RectTransform>();
 
@@ -404,9 +383,9 @@ namespace TH.Modules.UI
                 {
                     // Note:
                     // Awake里如果做了自适应设置，无法拿到mRootRectContentTransform的正确宽高，只能在Awake之后触发
-                    RectContentTrasform.sizeDelta = new Vector2(mRootRectContentTrasform.rect.width, mRootRectContentTrasform.rect.height);
-                    mMaskRect.width = mRootRectContentTrasform.rect.width;
-                    mMaskRect.height = mRootRectContentTrasform.rect.height;
+                    var rect = mRootRectContentTrasform.rect;
+                    RectContentTrasform.sizeDelta = rect.size;
+                    mMaskRect.size = rect.size;
                     mIsCorrectDataComplete = true;
                     initCenterPositionOffset();
                 }
@@ -612,8 +591,7 @@ namespace TH.Modules.UI
         /// <returns>返回清除单元格数据时最终停留(如果开启矫正，则为矫正后位置)的滚动位置</returns>
         public Vector2 clearCellDatas()
         {
-            var finalscrollnormalizedposition = Vector2.zero;
-            finalscrollnormalizedposition = ScrollRect.normalizedPosition;
+            var finalscrollnormalizedposition = ScrollRect.normalizedPosition;
             if (mCellDatas != null)
             {
                 // 调整容器数据时，强行停止滚动相关操作，避免刷新或进池出池等带来的过多问题
