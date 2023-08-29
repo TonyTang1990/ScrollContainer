@@ -1092,8 +1092,8 @@ namespace TH.Modules.UI
                 if (!mCellDatas[index].CellGO)
                 {
                     onCellInit(index);
+                    onCellShow(index);
                 }
-                onCellShow(index);
                 var currentscrollpos = getCurrentScrollPosition();
                 //统一换算成正的偏移位置，方便统一正向和逆向的滚动计算
                 currentscrollpos = Mathf.Abs(currentscrollpos);
