@@ -279,6 +279,10 @@ namespace TH.Modules.UI
         /// <returns></returns>
         public void changeSize(Vector2 newsize)
         {
+            if(mCellSize.Equals(newsize))
+            {
+                return;
+            }
             mCellSize = newsize;
             mOwnerContainer.forceUpdateDisplay(true);
             //Debug.Log($"单元格索引:{CellIndex}改变Size:[{mCellSize.x},{mCellSize.y}]");
