@@ -114,7 +114,7 @@ TextureImporter:
       213: 21300072
     second: textinput_a
   externalObjects: {}
-  serializedVersion: 11
+  serializedVersion: 13
   mipmaps:
     mipMapMode: 0
     enableMipMap: 0
@@ -131,9 +131,12 @@ TextureImporter:
     externalNormalMap: 0
     heightScale: 0.25
     normalMapFilter: 0
+    flipGreenChannel: 0
   isReadable: 0
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -142,9 +145,9 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: -1
-    aniso: -1
-    mipBias: -100
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
     wrapU: 1
     wrapV: 1
     wrapW: 1
@@ -165,10 +168,15 @@ TextureImporter:
   textureType: 8
   textureShape: 1
   singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
   maxTextureSizeSet: 0
   compressionQualitySet: 0
   textureFormatSet: 0
+  ignorePngGamma: 0
   applyGammaDecoding: 1
+  swizzle: 50462976
+  cookieLightType: 1
   platformSettings:
   - serializedVersion: 3
     buildTarget: DefaultTexturePlatform
@@ -180,6 +188,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   - serializedVersion: 3
@@ -192,6 +201,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 0
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   - serializedVersion: 3
@@ -204,6 +214,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 1
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   - serializedVersion: 3
@@ -216,6 +227,7 @@ TextureImporter:
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 1
+    ignorePlatformSupport: 0
     androidETC2FallbackOverride: 0
     forceMaximumCompressionQuality_BC6H_BC7: 1
   spriteSheet:
@@ -987,9 +999,45 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
-  spritePackingTag: 
+    nameFileIdTable:
+      box_a: 21300002
+      box_b: 21300004
+      box_c: 21300006
+      btn_a_beige: 21300008
+      btn_a_emerald: 21300010
+      btn_a_grey: 21300012
+      btn_a_red: 21300014
+      btn_b_beige: 21300016
+      btn_b_emerald: 21300018
+      btn_b_grey: 21300020
+      btn_b_red: 21300022
+      btn_c_beige: 21300024
+      btn_c_emerald: 21300026
+      btn_c_grey: 21300028
+      btn_c_red: 21300030
+      checkbox_blank: 21300032
+      checkbox_check: 21300034
+      divider_a: 21300036
+      gage_a_empty: 21300038
+      gage_b_empty: 21300040
+      gage_b_fill01: 21300042
+      gage_b_fill02: 21300044
+      gage_b_fill03: 21300046
+      gage_b_fill04: 21300048
+      gage_b_fill05: 21300050
+      gage_b_fill06: 21300052
+      gage_b_fill07: 21300054
+      gage_b_fill08: 21300056
+      gage_b_fill_progress: 21300058
+      icon_arrowdown: 21300060
+      innerbox_a: 21300062
+      innerbox_a_btn: 21300064
+      point_beige: 21300066
+      radio_blank: 21300068
+      radio_check: 21300070
+      textinput_a: 21300072
+  mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  pSDShowRemoveMatteOption: 0
   userData: 
   assetBundleName: tongyong
   assetBundleVariant: 
