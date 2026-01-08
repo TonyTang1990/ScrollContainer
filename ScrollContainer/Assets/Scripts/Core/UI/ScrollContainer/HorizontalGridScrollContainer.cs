@@ -57,9 +57,9 @@ namespace TH.Modules.UI
         /// <param name="keeprectcontentpos">是否保持rect content的相对位置(优先于scrollnormalizaedposition)</param>
         protected override void updateContainerData(Vector2? scrollnormalizaedposition = null, bool keeprectcontentpos = false)
         {
-            mTemplateCellSize = mCellDatas != null ? mCellDatas[0].getSize() : Vector2.zero;
             int totalcellnumber = mCellDatas != null ? mCellDatas.Count : 0;
-            mTotalNumRow = Mathf.CeilToInt(((mCellDatas != null ? mCellDatas.Count : 0) * 1.0f) / mNumCellPerRow);
+            mTemplateCellSize = (totalcellnumber > 0) ? mCellDatas[0].getSize() : Vector2.zero;
+            mTotalNumRow = Mathf.CeilToInt((totalcellnumber * 1.0f) / mNumCellPerRow);
             mTotalNumColume = Mathf.Min(totalcellnumber, mNumCellPerRow);
             
             //调整RectContent Rect大小
