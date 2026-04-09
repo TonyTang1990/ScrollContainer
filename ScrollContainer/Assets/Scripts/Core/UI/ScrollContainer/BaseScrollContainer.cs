@@ -353,6 +353,7 @@ namespace TH.Modules.UI
             mMoveToIndexDelegate = null;
             mMaxCorrectToCellIndex = -1;
             initPrefabTemplateInfo();
+            HideAllPrefabTemplate();
         }
 
         // Use this for initialization
@@ -375,6 +376,21 @@ namespace TH.Modules.UI
                 var prefabsize = SourcePrefabList[i].GetComponent<RectTransform>().rect.size;
                 mCellTemplateSizeList.Add(prefabsize);
                 mCellTemplateInstanceIDList.Add(SourcePrefabList[i].GetInstanceID());
+            }
+        }
+
+        /// <summary>
+        /// 隐藏所有预制件模板
+        /// </summary>
+        protected void HideAllPrefabTemplate()
+        {
+            if(SourcePrefabList == null || SourcePrefabList.Count == 0)
+            {
+                return;
+            }
+            foreach(var prefab in SourcePrefabList)
+            {
+                prefab.SetActive(false);
             }
         }
 
