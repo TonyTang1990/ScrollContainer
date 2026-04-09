@@ -446,6 +446,8 @@ namespace TH.Modules.UI
 
         public void OnDestroy()
         {
+            // 优先解绑，避免逻辑回调导致上层已经清理的情况出问题
+            unbindContainerCallBack();
             if (mCellDatas != null)
             {
                 for (int i = 0; i < mCellDatas.Count; i++)
@@ -462,7 +464,6 @@ namespace TH.Modules.UI
             mRootRectContentTrasform = null;
             mRectContent = null;
             RectContentTrasform = null;
-            unbindContainerCallBack();
         }
 
         /// <summary>
