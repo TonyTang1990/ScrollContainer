@@ -47,4 +47,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Resources/scenes/VerticalGalleryDemoScene.unity
     guid: bac19d5916ba8fc438024527cbe0b5e8
+  - enabled: 1
+    path: Assets/Resources/scenes/KeepPosRefreshScene.unity
+    guid: e0ee64d5983f0ff42b29afc1b8815eff
   m_configObjects: {}

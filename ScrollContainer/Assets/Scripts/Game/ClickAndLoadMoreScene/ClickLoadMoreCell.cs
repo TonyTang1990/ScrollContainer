@@ -35,22 +35,22 @@ public class ClickLoadMoreCell : MonoBehaviour
     /// <summary>
     /// Initialization
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="ownercontainer"></param>
-    public void init(int cellindex, BaseScrollContainer ownercontainer)
+    /// <param name="cellIndex"></param>
+    /// <param name="ownerContainer"></param>
+    public void Init(int cellIndex, BaseScrollContainer ownerContainer)
     {
         BtnLoadMore.onClick.RemoveAllListeners();
-        BtnLoadMore.onClick.AddListener(onBtnLoadMore);
-        mCellIndex = cellindex;
-        mOwnerContainer = ownercontainer;
+        BtnLoadMore.onClick.AddListener(OnBtnLoadMore);
+        mCellIndex = cellIndex;
+        mOwnerContainer = ownerContainer;
     }
 
     /// <summary>
     /// On Click Load More Button
     /// </summary>
-    private void onBtnLoadMore()
+    private void OnBtnLoadMore()
     {
-        var celldatalist = mOwnerContainer.createNormalCellDataListWithCount(20);
-        mOwnerContainer.addCellDataListWithIndex(celldatalist, mCellIndex);
+        var cellDataList = mOwnerContainer.CreateCellDatas(20);
+        mOwnerContainer.AddCellDatas(cellDataList, mCellIndex);
     }
 }

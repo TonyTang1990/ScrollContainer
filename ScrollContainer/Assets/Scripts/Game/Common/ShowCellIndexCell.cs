@@ -24,9 +24,9 @@ public class ShowCellIndexCell : MonoBehaviour
     /// <summary>
     /// Initialization
     /// </summary>
-    /// <param name="cellindex"></param>
-    public void init(int cellindex)
+    /// <param name="cellIndex"></param>
+    public void Init(int cellIndex)
     {
-        TxtCellName.text = $"Cell Index:{cellindex}";
+        TxtCellName.text = $"Cell Index:{cellIndex}";
     }
 }

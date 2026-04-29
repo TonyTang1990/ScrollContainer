@@ -36,16 +36,16 @@ public class DatePickerCell : MonoBehaviour
     /// <summary>
     /// Initialization
     /// </summary>
-    /// <param name="cellindex"></param>
+    /// <param name="cellIndex"></param>
     /// <param name="date"></param>
-    /// <param name="datetype"></param>
-    /// <param name="ischosendate"></param>
-    public void init(int cellindex, int date, EDateType datetype, bool ischosendate = false)
+    /// <param name="dateType"></param>
+    /// <param name="isChosenDate"></param>
+    public void Init(int cellIndex, int date, EDateType dateType, bool isChosenDate = false)
     {
-        mCellIndex = cellindex;
-        mDateType = datetype;
+        mCellIndex = cellIndex;
+        mDateType = dateType;
         TxtDate.text = date.ToString();
-        TxtDate.color = ischosendate ? Color.red : Color.white;
+        TxtDate.color = isChosenDate ? Color.red : Color.white;
     }
 
 }

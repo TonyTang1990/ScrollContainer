@@ -30,13 +30,13 @@ public class ChatMessageCell : MonoBehaviour
     /// <summary>
     /// 初始化
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="useemoji"></param>
-    /// <param name="chatcontent"></param>
-    public void init(int cellindex, bool useemoji, string chatcontent)
+    /// <param name="cellIndex"></param>
+    /// <param name="useEmoji"></param>
+    /// <param name="chatContent"></param>
+    public void init(int cellIndex, bool useEmoji, string chatContent)
     {
-        TxtChatContent.gameObject.SetActive(!useemoji);
-        ImgChatEmoji.gameObject.SetActive(useemoji);
-        TxtChatContent.text = chatcontent;
+        TxtChatContent.gameObject.SetActive(!useEmoji);
+        ImgChatEmoji.gameObject.SetActive(useEmoji);
+        TxtChatContent.text = chatContent;
     }
 }

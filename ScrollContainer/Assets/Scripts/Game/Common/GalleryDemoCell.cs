@@ -35,23 +35,23 @@ public class GalleryDemoCell : MonoBehaviour
     /// <summary>
     /// Initialization
     /// </summary>
-    /// <param name="cellindex"></param>
-    public void init(int cellindex)
+    /// <param name="cellIndex"></param>
+    public void Init(int cellIndex)
     {
-        TxtCellName.text = $"Cell Index:{cellindex}";
+        TxtCellName.text = $"Cell Index:{cellIndex}";
         mTempScale = Vector3.one;
     }
 
     /// <summary>
     /// 更新
     /// </summary>
-    /// <param name="newscale"></param>
-    /// <param name="newalpha"></param>
-    public void updateScaleAndAlpha(float newscale, float newalpha)
+    /// <param name="newScale"></param>
+    /// <param name="newAlpha"></param>
+    public void UpdateScaleAndAlpha(float newScale, float newAlpha)
     {
-        mTempScale.x = newscale;
-        mTempScale.y = newscale;
+        mTempScale.x = newScale;
+        mTempScale.y = newScale;
         CGParentNode.transform.localScale = mTempScale;
-        CGParentNode.alpha = newalpha;
+        CGParentNode.alpha = newAlpha;
     }
 }

@@ -91,7 +91,7 @@ public class GameObjectPool
     /// </summary>
     /// <param name="template">模板对象</param>
     /// <param name="number">初始化数量</param>
-    public void init(GameObject template, int number)
+    public void Init(GameObject template, int number)
     {
         if (template != null)
         {
@@ -99,7 +99,7 @@ public class GameObjectPool
             for (var i = 0; i < number; i++)
             {
                 var instance = GameObject.Instantiate<GameObject>(template);
-                push(instanceid, instance);
+                Push(instanceid, instance);
             }
         }
     }
@@ -107,9 +107,9 @@ public class GameObjectPool
     /// <summary>
     /// 缓存特定实例对象到对象池
     /// </summary>
-    /// <param name="instanceid">模板对象对象InstanceID</param>
+    /// <param name="instanceId">模板对象对象InstanceID</param>
     /// <param name="instance">放入对象池的实例对象</param>
-    public void push(int instanceid, GameObject instance)
+    public void Push(int instanceId, GameObject instance)
     {
         if (instance == null)
         {
@@ -136,15 +136,15 @@ public class GameObjectPool
         {
             // 为空的情况是游戏退出时挂载节点都为空了，会触发Unity报以外错误
         }
-        if (mGameObjectPoolMap.ContainsKey(instanceid))
+        if (mGameObjectPoolMap.ContainsKey(instanceId))
         {
-            mGameObjectPoolMap[instanceid].Add(instance);
+            mGameObjectPoolMap[instanceId].Add(instance);
         }
         else
         {
             var objectlist = new List<GameObject>();
             objectlist.Add(instance);
-            mGameObjectPoolMap.Add(instanceid, objectlist);
+            mGameObjectPoolMap.Add(instanceId, objectlist);
         }
     }
 
@@ -153,7 +153,7 @@ public class GameObjectPool
     /// </summary>
     /// <param name="template">模板对象预制件对象</param>
     /// <returns></returns>
-    public GameObject pop(GameObject template)
+    public GameObject Pop(GameObject template)
     {
         if (template == null)
         {
@@ -189,45 +189,41 @@ public class GameObjectPool
     /// <summary>
     /// 清除特定预制件所缓存的实例对象
     /// </summary>
-    /// <param name="instanceid">模板对象对象InstanceID</param>
-    public void clear(int instanceid)
+    /// <param name="instanceId">模板对象对象InstanceID</param>
+    public void Clear(int instanceId)
     {
-        if (mGameObjectPoolMap.ContainsKey(instanceid))
+        if (mGameObjectPoolMap.ContainsKey(instanceId))
         {
-            for (int i = 0; i < mGameObjectPoolMap[instanceid].Count; i++)
+            for (int i = 0; i < mGameObjectPoolMap[instanceId].Count; i++)
             {
-                GameObject.Destroy(mGameObjectPoolMap[instanceid][i]);
-                mGameObjectPoolMap[instanceid][i] = null;
+                GameObject.Destroy(mGameObjectPoolMap[instanceId][i]);
+                mGameObjectPoolMap[instanceId][i] = null;
             }
-            mGameObjectPoolMap[instanceid] = null;
-            mGameObjectPoolMap.Remove(instanceid);
+            mGameObjectPoolMap[instanceId] = null;
+            mGameObjectPoolMap.Remove(instanceId);
         }
         else
         {
-            Debug.LogError(string.Format("找不到InstanceID : {0}的缓存对象！", instanceid));
+            Debug.LogError(string.Format("找不到InstanceID : {0}的缓存对象！", instanceId));
         }
     }
 
     /// <summary>
     /// 清除所有缓存的对象
     /// </summary>
-    public void clearAll()
+    public void ClearAll()
     {
-        foreach (var objectlist in mGameObjectPoolMap)
+        foreach (var objectList in mGameObjectPoolMap)
         {
-            for (int i = 0; i < objectlist.Value.Count; i++)
+            for (int i = 0; i < objectList.Value.Count; i++)
             {
-                if(objectlist.Value[i] != null)
+                if(objectList.Value[i] != null)
                 {
-#if !UNITY_EDITOR
-                    GameObject.Destroy(objectlist.Value[i]);
-#else
-                    GameObject.Destroy(objectlist.Value[i]);
-#endif
-                    objectlist.Value[i] = null;
+                    GameObject.Destroy(objectList.Value[i]);
+                    objectList.Value[i] = null;
                 }
             }
-            objectlist.Value.Clear();
+            objectList.Value.Clear();
         }
         mGameObjectPoolMap.Clear();
     }

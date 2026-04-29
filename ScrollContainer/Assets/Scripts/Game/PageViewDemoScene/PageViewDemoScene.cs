@@ -78,15 +78,15 @@ public class PageViewDemoScene : MonoBehaviour
         }
         ImgPageChosenTempalte.gameObject.SetActive(false);
 
-        BtnBackToMainMenu.onClick.AddListener(onBtnBackToMainMenu);
-        PageViewContainer.bindContainerCallBack(onCellShow, null, null, onCellMoveTo);
-        PageViewContainer.setCellDatasByCellCount(PageTotalNumber);
+        BtnBackToMainMenu.onClick.AddListener(OnBtnBackToMainMenu);
+        PageViewContainer.BindContainerCallBack(OnCellShow, null, null, OnCellMoveTo);
+        PageViewContainer.SetCellCount(PageTotalNumber);
     }
 
     /// <summary>
     /// 返回主界面
     /// </summary>
-    private void onBtnBackToMainMenu()
+    private void OnBtnBackToMainMenu()
     {
         SceneManager.LoadScene(SceneNameDef.LauncherScene);
     }
@@ -96,28 +96,28 @@ public class PageViewDemoScene : MonoBehaviour
     /// </summary>
     /// <param name="cellindex"></param>
     /// <param name="cellinstance"></param>
-    private void onCellShow(int cellindex, GameObject cellinstance)
+    private void OnCellShow(int cellindex, GameObject cellinstance)
     {
         var pageviewcell = cellinstance.GetComponent<PageViewCell>();
         if (pageviewcell == null)
         {
             pageviewcell = cellinstance.AddComponent<PageViewCell>();
         }
-        pageviewcell.init(cellindex);
+        pageviewcell.Init(cellindex);
     }
 
     /// <summary>
     /// 单元格移动到指定单元格
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    private void onCellMoveTo(int cellindex, GameObject cellinstance)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    private void OnCellMoveTo(int cellIndex, GameObject cellInstance)
     {
-        if(mCurrentChosenPageIndex != cellindex)
+        if(mCurrentChosenPageIndex != cellIndex)
         {
             mPreChosenPageIndex = mCurrentChosenPageIndex;
-            mCurrentChosenPageIndex = cellindex;
-            updatePageChosenView();
+            mCurrentChosenPageIndex = cellIndex;
+            UpdatePageChosenView();
         }
     }
 
@@ -125,7 +125,7 @@ public class PageViewDemoScene : MonoBehaviour
     /// Update Page Chosen View
     /// 更新页面选择显示
     /// </summary>
-    private void updatePageChosenView()
+    private void UpdatePageChosenView()
     {
         if(mPreChosenPageIndex != -1 && mPreChosenPageIndex != mCurrentChosenPageIndex)
         {

@@ -38,11 +38,11 @@ namespace TH.Modules.UI
         private static void AddNewHorizontalContainer(MenuCommand command)
         {
             GameObject go = command.context as GameObject;
-            var hcontainergo = UIUtilitiesEditor.AddComponent<HorizontalScrollContainer>(go).gameObject;
-            hcontainergo.name = "HScrollContainer";
-            var childcontent = new GameObject("Content");
-            childcontent.AddComponent<RectTransform>();
-            childcontent.transform.SetParent(hcontainergo.transform, false);
+            var hContainerGo = UIUtilitiesEditor.AddComponent<HorizontalScrollContainer>(go).gameObject;
+            hContainerGo.name = "HScrollContainer";
+            var childContent = new GameObject("Content");
+            childContent.AddComponent<RectTransform>();
+            childContent.transform.SetParent(hContainerGo.transform, false);
         }
 
         void OnEnable()
@@ -68,12 +68,12 @@ namespace TH.Modules.UI
                 Debug.Log($"模拟测试单元格创建数量:{mSimulationCellNumber}");
                 var originalactiveself = mTargetHContainer.SourcePrefabList[mSimulationCellPrefabIndex].activeSelf;
                 mTargetHContainer.SourcePrefabList[mSimulationCellPrefabIndex].SetActive(true);
-                mTargetHContainer.setCellDatasByCellCount(mSimulationCellNumber);
+                mTargetHContainer.SetCellCount(mSimulationCellNumber);
                 mTargetHContainer.SourcePrefabList[mSimulationCellPrefabIndex].SetActive(originalactiveself);
             }
             if (GUILayout.Button("销毁模拟单元格"))
             {
-                mTargetHContainer.setCellDatas(null);
+                mTargetHContainer.SetCellDatas((List<CellData>)null);
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();

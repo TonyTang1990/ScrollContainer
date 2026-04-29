@@ -91,27 +91,34 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     [Header("选择滚动或删除按钮")]
     public Button SelectAndDeleteOrMove;
 
+    /// <summary>
+    /// 保持位置刷新按钮
+    /// </summary>
+    [Header("保持位置刷新按钮")]
+    public Button KeepPosRefresh;
+
     void Start ()
     {
-        TopToBottom.onClick.AddListener(onBtnTopToBottom);
-        BottomToTop.onClick.AddListener(onBtnBottomToTop);
-        LeftToRight.onClick.AddListener(onBtnLeftToRight);
-        RightToLeft.onClick.AddListener(onBtnRightToLeft);
-        GridView.onClick.AddListener(onBtnGridView);
-        ChatMessageList.onClick.AddListener(onBtnChatMessageList);
-        ChangeItemSize.onClick.AddListener(onBtnChangeItemSize);
-        ClickAndLoadMore.onClick.AddListener(onBtnClickAndLoadMore);
-        HorizontalGalleryDemo.onClick.AddListener(onBtnHorizontalGalleryDemo);
-        VerticalGalleryDemo.onClick.AddListener(onBtnVerticalGalleryDemo);
-        PageViewDemo.onClick.AddListener(onBtnPageViewDemo);
-        SpinDatePicker.onClick.AddListener(onBtnSpinDatePicker);
-        SelectAndDeleteOrMove.onClick.AddListener(onBtnSelectAndDeleteOrMove);
+        TopToBottom.onClick.AddListener(OnBtnTopToBottom);
+        BottomToTop.onClick.AddListener(OnBtnBottomToTop);
+        LeftToRight.onClick.AddListener(OnBtnLeftToRight);
+        RightToLeft.onClick.AddListener(OnBtnRightToLeft);
+        GridView.onClick.AddListener(OnBtnGridView);
+        ChatMessageList.onClick.AddListener(OnBtnChatMessageList);
+        ChangeItemSize.onClick.AddListener(OnBtnChangeItemSize);
+        ClickAndLoadMore.onClick.AddListener(OnBtnClickAndLoadMore);
+        HorizontalGalleryDemo.onClick.AddListener(OnBtnHorizontalGalleryDemo);
+        VerticalGalleryDemo.onClick.AddListener(OnBtnVerticalGalleryDemo);
+        PageViewDemo.onClick.AddListener(OnBtnPageViewDemo);
+        SpinDatePicker.onClick.AddListener(OnBtnSpinDatePicker);
+        SelectAndDeleteOrMove.onClick.AddListener(OnBtnSelectAndDeleteOrMove);
+        KeepPosRefresh.onClick.AddListener(OnBtnKeepPosRefresh);
     }
 
     /// <summary>
     /// 从上往下按钮点击
     /// </summary>
-    private void onBtnTopToBottom()
+    private void OnBtnTopToBottom()
     {
         SceneManager.LoadScene(SceneNameDef.TopToBottomScene);
     }
@@ -119,7 +126,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 从下往上按钮点击
     /// </summary>
-    private void onBtnBottomToTop()
+    private void OnBtnBottomToTop()
     {
         SceneManager.LoadScene(SceneNameDef.BottomToTopScene);
     }
@@ -127,7 +134,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 从左往右按钮点击
     /// </summary>
-    private void onBtnLeftToRight()
+    private void OnBtnLeftToRight()
     {
         SceneManager.LoadScene(SceneNameDef.LeftToRightScene);
     }
@@ -135,7 +142,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 从右往左按钮点击
     /// </summary>
-    private void onBtnRightToLeft()
+    private void OnBtnRightToLeft()
     {
         SceneManager.LoadScene(SceneNameDef.RightToLeftScene);
     }
@@ -143,7 +150,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 网格按钮点击
     /// </summary>
-    private void onBtnGridView()
+    private void OnBtnGridView()
     {
         SceneManager.LoadScene(SceneNameDef.GridViewScene);
     }
@@ -151,7 +158,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 聊天按钮点击
     /// </summary>
-    private void onBtnChatMessageList()
+    private void OnBtnChatMessageList()
     {
         SceneManager.LoadScene(SceneNameDef.ChatMessageListScene);
     }
@@ -159,7 +166,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 动态单元格大小按钮点击
     /// </summary>
-    private void onBtnChangeItemSize()
+    private void OnBtnChangeItemSize()
     {
         SceneManager.LoadScene(SceneNameDef.ChangeItemSizeScene);
     }
@@ -167,7 +174,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 点击加载更多按钮点击
     /// </summary>
-    private void onBtnClickAndLoadMore()
+    private void OnBtnClickAndLoadMore()
     {
         SceneManager.LoadScene(SceneNameDef.ClickAndLoadMoreScene);
     }
@@ -175,7 +182,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 横向画廊按钮点击
     /// </summary>
-    private void onBtnHorizontalGalleryDemo()
+    private void OnBtnHorizontalGalleryDemo()
     {
         SceneManager.LoadScene(SceneNameDef.HorizontalGalleryDemoScene);
     }
@@ -183,7 +190,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 竖向画廊按钮点击
     /// </summary>
-    private void onBtnVerticalGalleryDemo()
+    private void OnBtnVerticalGalleryDemo()
     {
         SceneManager.LoadScene(SceneNameDef.VerticalGalleryDemoScene);
     }
@@ -191,7 +198,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 翻页按钮点击
     /// </summary>
-    private void onBtnPageViewDemo()
+    private void OnBtnPageViewDemo()
     {
         SceneManager.LoadScene(SceneNameDef.PageViewDemoScene);
     }
@@ -199,7 +206,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 日期选择按钮点击
     /// </summary>
-    private void onBtnSpinDatePicker()
+    private void OnBtnSpinDatePicker()
     {
         SceneManager.LoadScene(SceneNameDef.SpinDatePickerScene);
     }
@@ -207,8 +214,16 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     /// <summary>
     /// 选择滚动或删除按钮点击
     /// </summary>
-    private void onBtnSelectAndDeleteOrMove()
+    private void OnBtnSelectAndDeleteOrMove()
     {
         SceneManager.LoadScene(SceneNameDef.SelectAndDeleteOrMoveScene);
+    }
+
+    /// <summary>
+    /// 保持位置刷新按钮点击
+    /// </summary>
+    private void OnBtnKeepPosRefresh()
+    {
+        SceneManager.LoadScene(SceneNameDef.KeepPosRefreshScene);
     }
 }

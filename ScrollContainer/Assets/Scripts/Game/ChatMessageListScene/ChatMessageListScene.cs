@@ -34,57 +34,57 @@ public class ChatMessageListScene : MonoBehaviour
 
     void Start()
     {
-        BtnBackToMainMenu.onClick.AddListener(onBtnBackToMainMenu);
-        ChatMessageListContainer.bindContainerCallBack(onCellShow);
+        BtnBackToMainMenu.onClick.AddListener(OnBtnBackToMainMenu);
+        ChatMessageListContainer.BindContainerCallBack(OnCellShow);
         mChatContentList = new List<string>();
-        List<int> prefabindexlist = new List<int>();
-        List<Vector2> cellsizelist = new List<Vector2>();
-        var chatleftprefabtemplate = ChatMessageListContainer.getPrefabTemplateWithPrefabIndex(0);
-        var chatleftprefabtemplatesize = chatleftprefabtemplate.GetComponent<RectTransform>().rect.size;
-        var chatrightprefabtemplate = ChatMessageListContainer.getPrefabTemplateWithPrefabIndex(1);
-        var chatrightprefabtemplatesize = chatrightprefabtemplate.GetComponent<RectTransform>().rect.size;
+        List<int> prefabIndexList = new List<int>();
+        List<Vector2> cellSizeList = new List<Vector2>();
+        var chatLeftPrefabTemplate = ChatMessageListContainer.GetPrefabIndexTemplate(0);
+        var chatLeftPrefabTemplateSize = chatLeftPrefabTemplate.GetComponent<RectTransform>().rect.size;
+        var chatRightPrefabTemplate = ChatMessageListContainer.GetPrefabIndexTemplate(1);
+        var chatRightPrefabTemplateSize = chatRightPrefabTemplate.GetComponent<RectTransform>().rect.size;
 
         TimeCounter tc = new TimeCounter();
         tc.Start("ChatContainer");
         for (int i = 0; i < 20; i++)
         {
-            var prefabindex = i % 2;
-            prefabindexlist.Add(prefabindex);
-            var chatcontent = $"Cell Index:{i}。";
+            var prefabIndex = i % 2;
+            prefabIndexList.Add(prefabIndex);
+            var chatContent = $"Cell Index:{i}。";
             for (int j = 0; j < i; j++)
             {
-                chatcontent += $"Chat Content Index:{j}.";
+                chatContent += $"Chat Content Index:{j}.";
             }
-            mChatContentList.Add(chatcontent);
+            mChatContentList.Add(chatContent);
             // Content Chat
-            var chatprefab = prefabindex == 0 ? chatleftprefabtemplate : chatrightprefabtemplate;
-            var chatprefabsize = prefabindex == 0 ? chatleftprefabtemplatesize : chatrightprefabtemplatesize;
+            var chatPrefab = prefabIndex == 0 ? chatLeftPrefabTemplate : chatRightPrefabTemplate;
+            var chatPrefabSize = prefabIndex == 0 ? chatLeftPrefabTemplateSize : chatRightPrefabTemplateSize;
             if (i % 3 != 2)
             {
-                var chatmessagecell = chatprefab.GetComponent<ChatMessageCell>();
-                var cellsize = TextUtils.GetTextStringRealSize(chatcontent, chatmessagecell.TxtChatContent);
-                cellsize.x = chatprefabsize.x;
+                var chatMessageCell = chatPrefab.GetComponent<ChatMessageCell>();
+                var cellSize = TextUtils.GetTextStringRealSize(chatContent, chatMessageCell.TxtChatContent);
+                cellSize.x = chatPrefabSize.x;
                 // 25 is TxtChatContent offset
-                if (cellsize.y - 25 <= chatprefabsize.y)
+                if (cellSize.y - 25 <= chatPrefabSize.y)
                 {
-                    cellsize.y = chatprefabsize.y;
+                    cellSize.y = chatPrefabSize.y;
                 }
-                cellsizelist.Add(cellsize);
+                cellSizeList.Add(cellSize);
             }
             else
             {
                 // Emoji Chat
-                cellsizelist.Add(chatprefabsize);
+                cellSizeList.Add(chatPrefabSize);
             }
         }
-        ChatMessageListContainer.setCellDatasByDataList(prefabindexlist, cellsizelist);
+        ChatMessageListContainer.SetCellDatas(prefabIndexList, cellSizeList);
         tc.End();
     }
 
     /// <summary>
     /// 返回主界面
     /// </summary>
-    private void onBtnBackToMainMenu()
+    private void OnBtnBackToMainMenu()
     {
         SceneManager.LoadScene(SceneNameDef.LauncherScene);
     }
@@ -92,15 +92,15 @@ public class ChatMessageListScene : MonoBehaviour
     /// <summary>
     /// 单元格显示回调
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    private void onCellShow(int cellindex, GameObject cellinstance)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    private void OnCellShow(int cellIndex, GameObject cellInstance)
     {
-        var toptobottomcell = cellinstance.GetComponent<ChatMessageCell>();
-        if (toptobottomcell == null)
+        var chatMessageCell = cellInstance.GetComponent<ChatMessageCell>();
+        if (chatMessageCell == null)
         {
-            toptobottomcell = cellinstance.AddComponent<ChatMessageCell>();
+            chatMessageCell = cellInstance.AddComponent<ChatMessageCell>();
         }
-        toptobottomcell.init(cellindex, cellindex % 3 == 2, mChatContentList[cellindex]);
+        chatMessageCell.init(cellIndex, cellIndex % 3 == 2, mChatContentList[cellIndex]);
     }
 }

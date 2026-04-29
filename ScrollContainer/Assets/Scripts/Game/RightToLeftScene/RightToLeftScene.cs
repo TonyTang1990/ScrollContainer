@@ -28,15 +28,15 @@ public class RightToLeftScene : MonoBehaviour
 
     void Start()
     {
-        BtnBackToMainMenu.onClick.AddListener(onBtnBackToMainMenu);
-        RightToLeftContainer.bindContainerCallBack(onCellShow);
-        RightToLeftContainer.setCellDatasByCellCount(20);
+        BtnBackToMainMenu.onClick.AddListener(OnBtnBackToMainMenu);
+        RightToLeftContainer.BindContainerCallBack(OnCellShow);
+        RightToLeftContainer.SetCellCount(20);
     }
 
     /// <summary>
     /// 返回主界面
     /// </summary>
-    private void onBtnBackToMainMenu()
+    private void OnBtnBackToMainMenu()
     {
         SceneManager.LoadScene(SceneNameDef.LauncherScene);
     }
@@ -44,15 +44,15 @@ public class RightToLeftScene : MonoBehaviour
     /// <summary>
     /// 单元格显示回调
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    private void onCellShow(int cellindex, GameObject cellinstance)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    private void OnCellShow(int cellIndex, GameObject cellInstance)
     {
-        var toptobottomcell = cellinstance.GetComponent<ShowCellIndexCell>();
-        if (toptobottomcell == null)
+        var shoCellIndexCell = cellInstance.GetComponent<ShowCellIndexCell>();
+        if (shoCellIndexCell == null)
         {
-            toptobottomcell = cellinstance.AddComponent<ShowCellIndexCell>();
+            shoCellIndexCell = cellInstance.AddComponent<ShowCellIndexCell>();
         }
-        toptobottomcell.init(cellindex);
+        shoCellIndexCell.Init(cellIndex);
     }
 }

@@ -35,30 +35,30 @@ using UnityEngine;
 /*
 使用示例介绍:
 示例1(使用默认第一个预制件且默认预制件大小):
-    Container.bindContainerCallBack(onContainerOnShow);
-    Container.setCellDatasByCellCount(mContainerSourceList.Count);
+    Container.BindContainerCallBack(OnContainerOnShow);
+    Container.SetCellCount(mContainerSourceList.Count);
 
 示例2(手动传单元格模板选择和大小信息) :
-    Container.bindContainerCallBack(onContainerOnShow);
-    Container.createNormalCellDataList(prefabindexlist, cellsizelist);
+    Container.BindContainerCallBack(OnContainerOnShow);
+    Container.CreateCellDatas(prefabIndexList, cellSizeList);
 
 示例3(动态修改指定单元格大小) :
-    Container.bindContainerCallBack(onContainerOnShow);
-    Container.createNormalCellDataList(prefabindexlist, cellsizelist);
+    Container.BindContainerCallBack(OnContainerOnShow);
+    Container.CreateCellDatas(prefaBindexList, cellSizeList);
     // 动态改变单元格索引5的大小到(50, 50)
-    var celldata = Container.getCellDataWithIndex(5);
-    celldata.changeSize(new Vector2(50, 50);
+    var cellData = Container.GetCellData(5);
+    cellData.ChangeSize(new Vector2(50, 50));
 
 示例4(动态增删指定索引) :
-    Container.bindContainerCallBack(onContainerOnShow);
-    Container.createNormalCellDataList(prefabindexlist, cellsizelist);
+    Container.BindContainerCallBack(OnContainerOnShow);
+    Container.CreateCellDatas(prefabindexlist, cellsizelist);
 
     // 增加单元格到索引位置5
-    var celldata = Container.createNormalCellData(prefabindex, size);
-    celldata.addCellDataWithIndex(celldata, 5);
+    var cellData = Container.CreateCellData(prefabIndex, size);
+    Container.AddCellDataWithIndex(cellData, 5);
         
     // 移除索引位置5的单元格
-    celldata.removeCellWithIndex(5);
+    Container.RemoveCellIndex(5);
 */
 
 namespace TH.Modules.UI
@@ -184,33 +184,33 @@ namespace TH.Modules.UI
         /// <summary>
         /// 设置初始数据
         /// </summary>
-        /// <param name="cellprefabindex">单元格模板索引</param>
+        /// <param name="cellPrefabIndex">单元格模板索引</param>
         /// <param name="container">单元格容器</param>
         /// <param name="size">单元格大小(默认不传是预制件大小)</param>
-        public void setData(int cellprefabindex, BaseScrollContainer container, Vector2? size = null)
+        public void SetData(int cellPrefabIndex, BaseScrollContainer container, Vector2? size = null)
         {
             Debug.Assert(container != null, "单元格容器不允许传空!");
-            CellPrefabIndex = cellprefabindex;
+            CellPrefabIndex = cellPrefabIndex;
             mOwnerContainer = container;
-            mCellSize = size == null ? mOwnerContainer.getPrefabTemplateSizeWithPrefabIndex(CellPrefabIndex) : (Vector2)size;
+            mCellSize = size == null ? mOwnerContainer.GetPrefabIndexTemplateSize(CellPrefabIndex) : (Vector2)size;
             CellRect.Set(0.0f, 0.0f, mCellSize.x, mCellSize.y);
         }
 
         /// <summary>
         /// 初始化单元格实例对象
         /// </summary>
-        /// <param name="cellinstance"></param>
-        public void init(GameObject cellinstance)
+        /// <param name="cellInstance"></param>
+        public void Init(GameObject cellInstance)
         {
-            if(cellinstance != null)
+            if(cellInstance != null)
             {
-                CellGO = cellinstance;
+                CellGO = cellInstance;
                 // 不同单元格容器公用同一个模板对象可能会出现锚点不一致问题，所以每次强制设置
                 CellGORectTransform = CellGO.transform as RectTransform;
                 CellGORectTransform.anchorMax = AnchorMax;
                 CellGORectTransform.anchorMin = AnchorMin;
                 CellGORectTransform.pivot = Pivot;
-                updateCellSizeAndPosition();
+                UpdateCellSizeAndPosition();
                 if (!CellGO.activeSelf)
                 {
                     CellGO.SetActive(true);
@@ -226,7 +226,7 @@ namespace TH.Modules.UI
         /// <summary>
         /// 更新单元格大小和位置数据
         /// </summary>
-        public void updateCellSizeAndPosition()
+        public void UpdateCellSizeAndPosition()
         {
             CellGORectTransform.sizeDelta = mCellSize;
             CellGO.transform.localPosition = mRectPos;
@@ -235,31 +235,31 @@ namespace TH.Modules.UI
         /// <summary>
         /// 设置Cell的Rect区域
         /// </summary>
-        /// <param name="cellrectpos">Cell单元格显示位置</param>
-        /// <param name="cellmaskrect">cell的rect区域用于判定是否在Mask显示区域</param>
-        public void setRect(Vector2 cellrectpos, Vector2 cellmaskrect)
+        /// <param name="cellRectPos">Cell单元格显示位置</param>
+        /// <param name="cellMaskRect">cell的rect区域用于判定是否在Mask显示区域</param>
+        public void SetRect(Vector2 cellRectPos, Vector2 cellMaskRect)
         {
             if (CellPrefabIndex == -1)
             {
                 return;
             }
-            mRectPos.x = cellrectpos.x;
-            mRectPos.y = cellrectpos.y;
+            mRectPos.x = cellRectPos.x;
+            mRectPos.y = cellRectPos.y;
             mRectAbsPos.x = Mathf.Abs(mRectPos.x);
             mRectAbsPos.y = Mathf.Abs(mRectPos.y);
-            CellRect = new Rect(cellmaskrect.x, cellmaskrect.y, mCellSize.x, mCellSize.y);
+            CellRect = new Rect(cellMaskRect.x, cellMaskRect.y, mCellSize.x, mCellSize.y);
         }
 
         /// <summary>
         /// 设置Cell预制件的Anchor和Pivot
         /// </summary>
-        /// <param name="anchormax"></param>
-        /// <param name="anchormin"></param>
+        /// <param name="anchorMax"></param>
+        /// <param name="anchorMin"></param>
         /// <param name="pivot"></param>
-        public void setAnchor(Vector2 anchormax, Vector2 anchormin, Vector2 pivot)
+        public void SetAnchor(Vector2 anchorMax, Vector2 anchorMin, Vector2 pivot)
         {
-            AnchorMax = anchormax;
-            AnchorMin = anchormin;
+            AnchorMax = anchorMax;
+            AnchorMin = anchorMin;
             Pivot = pivot;
         }
 
@@ -267,7 +267,7 @@ namespace TH.Modules.UI
         /// 获取当前Cell大小(默认为预制件宽高)
         /// </summary>
         /// <returns></returns>
-        public Vector2 getSize()
+        public Vector2 GetSize()
         {
             return mCellSize;
         }
@@ -275,16 +275,16 @@ namespace TH.Modules.UI
         /// <summary>
         /// 改变当前Cell大小(手动改Size走这里)
         /// </summary>
-        /// <param name="newsize">新的单元格大小</param>
+        /// <param name="newSize">新的单元格大小</param>
         /// <returns></returns>
-        public void changeSize(Vector2 newsize)
+        public void ChangeSize(Vector2 newSize)
         {
-            if(mCellSize.Equals(newsize))
+            if(mCellSize.Equals(newSize))
             {
                 return;
             }
-            mCellSize = newsize;
-            mOwnerContainer.forceUpdateDisplay(true);
+            mCellSize = newSize;
+            mOwnerContainer.ForceUpdateDisplay(true);
             //Debug.Log($"单元格索引:{CellIndex}改变Size:[{mCellSize.x},{mCellSize.y}]");
         }
 
@@ -292,7 +292,7 @@ namespace TH.Modules.UI
         /// 当前单元格是否可见
         /// </summary>
         /// <returns></returns>
-        public bool isVisible()
+        public bool IsVisible()
         {
             return mOwnerContainer.MaskRect.Overlaps(CellRect);
         }
@@ -301,7 +301,7 @@ namespace TH.Modules.UI
         /// 获取当前Cell相对RectContent位置
         /// </summary>
         /// <returns></returns>
-        public Vector2 getPos()
+        public Vector2 GetPos()
         {
             return mRectPos;
         }
@@ -310,7 +310,7 @@ namespace TH.Modules.UI
         /// 获取当前Cell相对RectContent绝对值位置
         /// </summary>
         /// <returns></returns>
-        public Vector2 getAbsPos()
+        public Vector2 GetAbsPos()
         {
             return mRectAbsPos;
         }
@@ -318,7 +318,7 @@ namespace TH.Modules.UI
         /// <summary>
         /// Cell数据清除
         /// </summary>
-        public void clear()
+        public void Clear()
         {
             mOwnerContainer = null;
             CellGO = null;

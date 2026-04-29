@@ -81,5 +81,8 @@ public static class SceneNameDef
     /// </summary>
     public const string SelectAndDeleteOrMoveScene = "SelectAndDeleteOrMoveScene";
 
-
+    /// <summary>
+    /// KeepPosRefreshScene场景
+    /// </summary>
+    public const string KeepPosRefreshScene = "KeepPosRefreshScene";
 }

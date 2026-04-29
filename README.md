@@ -40,6 +40,8 @@ ScrollContainer
 
 ![SelectAndDeleteOrMoveScene](/Images/SelectAndDeleteOrMoveScene.PNG)
 
+![KeepPosRefresh](/Images/KeepPosRefresh.PNG)
+
 ## 实现原理
 
 1. 通过手动传单元格大小和预制件索引来实现自定义单元格大小和预制件选择

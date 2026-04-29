@@ -56,28 +56,40 @@ namespace TH.Modules.UI
             mMaxCorrectToCellRowIndex = -1;
         }
 
-        /// <summary>
-        /// 更新容器数据
+         /// <summary>
+        /// 获取指定单元格数据列表的容器大小
         /// </summary>
-        /// <param name="scrollnormalizaedposition">单元格初始滚动位置</param>
-        /// <param name="keeprectcontentpos">是否保持rect content的相对位置(优先于scrollnormalizaedposition)</param>
-        protected override void updateContainerData(Vector2? scrollnormalizaedposition = null, bool keeprectcontentpos = false)
+        /// <param name="cellDatas"></param>
+        /// <returns></returns>
+        protected override Vector2 GetContentSizeByDatas(List<CellData> cellDatas = null)
         {
-            int totalcellnumber = mCellDatas != null ? mCellDatas.Count : 0;
-            mTemplateCellSize = (totalcellnumber > 0) ? mCellDatas[0].getSize() : Vector2.zero;
+            int totalcellnumber = cellDatas != null ? cellDatas.Count : 0;
+            mTemplateCellSize = (totalcellnumber > 0) ? cellDatas[0].GetSize() : Vector2.zero;
             mTotalNumRow = Mathf.CeilToInt((totalcellnumber * 1.0f) / mNumCellPerRow);
             mTotalNumColume = Mathf.Min(totalcellnumber, mNumCellPerRow);
 
             //调整RectContent Rect大小
             Vector2 contentrectsize = mRootRectContentTrasform.rect.size;
             Vector2 contentnewsize = Vector2.zero;
-            if (mCellDatas != null && mCellDatas.Count != 0)
+            if (cellDatas != null && cellDatas.Count != 0)
             {
                 contentnewsize.x = mRootRectContentTrasform.rect.size.x;
                 contentnewsize.y = mTotalNumRow * mTemplateCellSize.y + (mTotalNumRow - 1) * CellSpace + BeginOffset.y * 2;
             }
             //根据所有Cell的Size设置RectContent Rect大小
-            RectContentTrasform.sizeDelta = contentrectsize.y >= contentnewsize.y ? contentrectsize : contentnewsize;
+            return contentrectsize.y >= contentnewsize.y ? contentrectsize : contentnewsize;
+        }
+
+        /// <summary>
+        /// 更新容器数据
+        /// </summary>
+        /// <param name="scrollnormalizaedposition">单元格初始滚动位置</param>
+        /// <param name="keeprectcontentpos">是否保持rect content的相对位置(优先于scrollnormalizaedposition)</param>
+        protected override void UpdateContainerData(Vector2? scrollnormalizaedposition = null, bool keeprectcontentpos = false)
+        {
+            var newContentSize = GetContentSizeByDatas(mCellDatas);
+            RectContentTrasform.sizeDelta = newContentSize;
+
             //Debug.Log($"当前纵向网格单元格滚动Size:{mRectContentTrasform.sizeDelta.ToString()}");
             mAvalibleScrollDistance = RectContentTrasform.rect.height - mRootRectContentTrasform.rect.height;
             //Debug.Log($"当前纵向网格单元格可滚动距离:{mAvalibleScrollDistance}");
@@ -114,26 +126,26 @@ namespace TH.Modules.UI
                 cellrectpos.y = mIsReverse == false ? -positionoffsety : positionoffsety;
                 cellmaskbenginoffset.x = positionoffsetx;
                 cellmaskbenginoffset.y = mIsReverse == false ? positionoffsety : RectContentTrasform.rect.height - positionoffsety - mTemplateCellSize.y; 
-                mCellDatas[i].setRect(cellrectpos, cellmaskbenginoffset);
-                mCellDatas[i].setAnchor(mScrollAnchorPosition, mScrollAnchorPosition, mScrollAnchorPosition);
+                mCellDatas[i].SetRect(cellrectpos, cellmaskbenginoffset);
+                mCellDatas[i].SetAnchor(mScrollAnchorPosition, mScrollAnchorPosition, mScrollAnchorPosition);
                 mCellDatas[i].CellIndex = i;
             }
             // 强制更新最新的滚动索引位置
-            updateScrollValue();
-            updateScrollable();
+            UpdateScrollValue();
+            UpdateScrollable();
         }
 
         /// <summary>
         /// 更新最大矫正到单元格索引值
         /// </summary>
-        protected override void updateMaxCorrectToCellIndex()
+        protected override void UpdateMaxCorrectToIndex()
         {
             if (CorrectCellPostionSwitch)
             {
                 var maxscrolloffset = RectContentTrasform.rect.height - mRootRectContentTrasform.rect.height;
                 for (int i = 0, length = mCellDatas != null ? mCellDatas.Count : 0; i < length; i++)
                 {
-                    var cellabspos = mCellDatas[i].getAbsPos();
+                    var cellabspos = mCellDatas[i].GetAbsPos();
                     if (cellabspos.y - BeginOffset.y <= maxscrolloffset)
                     {
                         mMaxCorrectToCellIndex = i;
@@ -157,7 +169,7 @@ namespace TH.Modules.UI
         /// Initialization for Center Position Offset
         /// 初始化中心位置偏移
         /// </summary>
-        protected override void initCenterPositionOffset()
+        protected override void InitCenterPositionOffset()
         {
             mCenterPositionOffset = RectContentTrasform.rect.size / 2 - BeginOffset;
         }
@@ -167,7 +179,7 @@ namespace TH.Modules.UI
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        protected override int correctMoveToIndex(int index)
+        protected override int CorrectMoveToIndex(int index)
         {
             var finalmovetoindex = 0;
             if (!CorrectCellPostionSwitch)
@@ -195,17 +207,17 @@ namespace TH.Modules.UI
         /// 滚动回调刷新Cell显示
         /// </summary>
         /// <param name="scrollpos"></param>
-        protected override void onScrollChanged(Vector2 scrollpos)
+        protected override void OnScrollChanged(Vector2 scrollpos)
         {
             if (mCellDatas != null)
             {
-                updateScrollValue();
+                UpdateScrollValue();
                 mMaskRect.y = mAvalibleScrollDistance * (1 - ScrollRect.verticalNormalizedPosition);
                 for (int i = 0; i < mCellDatas.Count; i++)
                 {
-                    onCellDisplay(i);
+                    OnCellDisplay(i);
                 }
-                checkCellPostionCorrect(mCurrentScrollDir);
+                CheckCellPosCorrect(mCurrentScrollDir);
             }
         }
 
@@ -215,7 +227,7 @@ namespace TH.Modules.UI
         /// </summary>
         /// <param name="scrollposition"></param>
         /// <returns></returns>
-        protected override float getSpecificScrollPositonScrollIndex(float scrollposition)
+        protected override float GetScrollPosIndex(float scrollposition)
         {
             if (mCellDatas != null)
             {
@@ -226,17 +238,17 @@ namespace TH.Modules.UI
                     {
                         var preindex = i * mNumCellPerRow;
                         var nextindex = (i + 1) * mNumCellPerRow;
-                        if (scrollposition < mCellDatas[0].getAbsPos().y)
+                        if (scrollposition < mCellDatas[0].GetAbsPos().y)
                         {
                             scrollindex = 0;
-                            scrollindex += ((scrollposition - mCellDatas[0].getAbsPos().y) / mTemplateCellSize.y);
+                            scrollindex += ((scrollposition - mCellDatas[0].GetAbsPos().y) / mTemplateCellSize.y);
                             break;
                         }
-                        else if (scrollposition >= mCellDatas[preindex].getAbsPos().y && scrollposition <= mCellDatas[nextindex].getAbsPos().y)
+                        else if (scrollposition >= mCellDatas[preindex].GetAbsPos().y && scrollposition <= mCellDatas[nextindex].GetAbsPos().y)
                         {
                             scrollindex = i;
-                            var celloffset = mCellDatas[nextindex].getAbsPos().y - mCellDatas[preindex].getAbsPos().y;
-                            scrollindex += ((scrollposition - mCellDatas[preindex].getAbsPos().y) / celloffset);
+                            var celloffset = mCellDatas[nextindex].GetAbsPos().y - mCellDatas[preindex].GetAbsPos().y;
+                            scrollindex += ((scrollposition - mCellDatas[preindex].GetAbsPos().y) / celloffset);
                             break;
                         }
                     }
@@ -244,7 +256,7 @@ namespace TH.Modules.UI
                     {
                         scrollindex = (length - 1);
                         var preindex = (length - 1) * mNumCellPerRow;
-                        scrollindex += ((scrollposition + mCellDatas[preindex].getAbsPos().y) / mTemplateCellSize.y);
+                        scrollindex += ((scrollposition + mCellDatas[preindex].GetAbsPos().y) / mTemplateCellSize.y);
                         break;
                     }
                 }
@@ -262,7 +274,7 @@ namespace TH.Modules.UI
         /// <param name="scrolldir"></param>
         /// <param name="igorepositioncheckthredhold">是否忽略单元格矫正速度判定</param>
         /// <param name="requirescrolldir">是否要求有效滚动方向才矫正</param>
-        protected override bool checkCellPostionCorrect(EScrollDir scrolldir, bool igorepositioncheckthredhold = false, bool requirescrolldir = true)
+        protected override bool CheckCellPosCorrect(EScrollDir scrolldir, bool igorepositioncheckthredhold = false, bool requirescrolldir = true)
         {
             if (CorrectCellPostionSwitch && mIsEndDrag)
             {
@@ -294,7 +306,7 @@ namespace TH.Modules.UI
                         if (destinationindex != -1)
                         {
                             mIsCorrectScrolling = true;
-                            moveToIndex(destinationindex, CorrectCellTime);
+                            MoveToIndex(destinationindex, CorrectCellTime);
                             mCurrentScrollDir = EScrollDir.None;
                             ScrollRect.StopMovement();
                             return true;

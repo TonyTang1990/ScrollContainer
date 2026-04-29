@@ -54,31 +54,31 @@ public class ChangeItemSizeCell : MonoBehaviour
     /// <summary>
     /// Initialization
     /// </summary>
-    /// <param name="cellindex"></param>
-    public void init(int cellindex, BaseScrollContainer ownercontainer)
+    /// <param name="cellIndex"></param>
+    public void init(int cellIndex, BaseScrollContainer ownerContainer)
     {
-        TxtCellContent.text = $"Cell Index:{cellindex}";
+        TxtCellContent.text = $"Cell Index:{cellIndex}";
         BtnChangeSize.onClick.RemoveAllListeners();
-        BtnChangeSize.onClick.AddListener(onBtnChangeSize);
+        BtnChangeSize.onClick.AddListener(OnBtnChangeSize);
         RectExpandArea.gameObject.SetActive(mIsExpanding);
-        mCellIndex = cellindex;
-        mOwnerContainer = ownercontainer;
+        mCellIndex = cellIndex;
+        mOwnerContainer = ownerContainer;
     }
 
     /// <summary>
     /// On Click Change Size Button
     /// </summary>
-    private void onBtnChangeSize()
+    private void OnBtnChangeSize()
     {
         mIsExpanding = !mIsExpanding;
         RectExpandArea.gameObject.SetActive(mIsExpanding);
-        var prefabsize = mOwnerContainer.getPrefabTemplateSizeWithCellIndex(mCellIndex);
-        var newsize = prefabsize;
+        var prefabSize = mOwnerContainer.GetCellIndexTemplateSize(mCellIndex);
+        var newSize = prefabSize;
         if(mIsExpanding)
         {
-            newsize.y += RectExpandArea.rect.size.y;
+            newSize.y += RectExpandArea.rect.size.y;
         }
-        var celldata = mOwnerContainer.getCellDataWithIndex(mCellIndex);
-        celldata.changeSize(newsize);
+        var cellData = mOwnerContainer.GetCellData(mCellIndex);
+        cellData.ChangeSize(newSize);
     }
 }

@@ -37,11 +37,11 @@ namespace TH.Modules.UI
         private static void AddNewVerticalGridContainer(MenuCommand command)
         {
             GameObject go = command.context as GameObject;
-            var vgcontainergo = UIUtilitiesEditor.AddComponent<VerticalGridScrollContainer>(go).gameObject;
-            vgcontainergo.name = "NewVGContainer";
-            var childcontent = new GameObject("Content");
-            childcontent.AddComponent<RectTransform>();
-            childcontent.transform.SetParent(vgcontainergo.transform, false);
+            var vgContainerGo = UIUtilitiesEditor.AddComponent<VerticalGridScrollContainer>(go).gameObject;
+            vgContainerGo.name = "NewVGContainer";
+            var childContent = new GameObject("Content");
+            childContent.AddComponent<RectTransform>();
+            childContent.transform.SetParent(vgContainerGo.transform, false);
         }
 
         void OnEnable()
@@ -52,10 +52,10 @@ namespace TH.Modules.UI
         public override void OnInspectorGUI()
         {
             EditorGUILayout.BeginHorizontal();
-            var originalcolor = GUI.color;
+            var originalColor = GUI.color;
             GUI.color = Color.yellow;
             GUILayout.Label("竖向网格单元格容器不支持不同大小的单元格!", "Box", GUILayout.ExpandWidth(true));
-            GUI.color = originalcolor;
+            GUI.color = originalColor;
             EditorGUILayout.EndHorizontal();
             base.OnInspectorGUI();
             serializedObject.Update();
@@ -73,12 +73,12 @@ namespace TH.Modules.UI
                 Debug.Log($"模拟测试单元格创建数量:{mSimulationCellNumber}");
                 var originalactiveself = mTargetVGContainer.SourcePrefabList[mSimulationCellPrefabIndex].activeSelf;
                 mTargetVGContainer.SourcePrefabList[mSimulationCellPrefabIndex].SetActive(true);
-                mTargetVGContainer.setCellDatasByCellCount(mSimulationCellNumber);
+                mTargetVGContainer.SetCellCount(mSimulationCellNumber);
                 mTargetVGContainer.SourcePrefabList[mSimulationCellPrefabIndex].SetActive(originalactiveself);
             }
             if (GUILayout.Button("销毁模拟单元格"))
             {
-                mTargetVGContainer.setCellDatas(null);
+                mTargetVGContainer.SetCellDatas((List<CellData>)null);
             }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndVertical();

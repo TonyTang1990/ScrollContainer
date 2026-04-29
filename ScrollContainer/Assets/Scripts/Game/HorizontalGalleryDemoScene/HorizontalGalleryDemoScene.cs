@@ -28,15 +28,15 @@ public class HorizontalGalleryDemoScene : MonoBehaviour
 
     void Start()
     {
-        BtnBackToMainMenu.onClick.AddListener(onBtnBackToMainMenu);
-        HorizontalGalleryDemoContainer.bindContainerCallBack(onCellShow, null, onCellVisibleScroll);
-        HorizontalGalleryDemoContainer.setCellDatasByCellCount(20);
+        BtnBackToMainMenu.onClick.AddListener(OnBtnBackToMainMenu);
+        HorizontalGalleryDemoContainer.BindContainerCallBack(OnCellShow, null, OnCellVisibleScroll);
+        HorizontalGalleryDemoContainer.SetCellCount(20);
     }
 
     /// <summary>
     /// 返回主界面
     /// </summary>
-    private void onBtnBackToMainMenu()
+    private void OnBtnBackToMainMenu()
     {
         SceneManager.LoadScene(SceneNameDef.LauncherScene);
     }
@@ -44,36 +44,36 @@ public class HorizontalGalleryDemoScene : MonoBehaviour
     /// <summary>
     /// 单元格显示回调
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    private void onCellShow(int cellindex, GameObject cellinstance)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    private void OnCellShow(int cellIndex, GameObject cellInstance)
     {
-        var gallerydemocell = cellinstance.GetComponent<GalleryDemoCell>();
-        if (gallerydemocell == null)
+        var galleryDemoCell = cellInstance.GetComponent<GalleryDemoCell>();
+        if (galleryDemoCell == null)
         {
-            gallerydemocell = cellinstance.AddComponent<GalleryDemoCell>();
+            galleryDemoCell = cellInstance.AddComponent<GalleryDemoCell>();
         }
-        gallerydemocell.init(cellindex);
+        galleryDemoCell.Init(cellIndex);
     }
 
     /// <summary>
     /// 单元格可见滚动回调
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    /// <param name="currentscrollindex"></param>
-    /// <param name="cellcenteroffsetposition"></param>
-    private void onCellVisibleScroll(int cellindex, GameObject cellinstance, float currentscrollindex, float cellcenteroffsetposition)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    /// <param name="currentScrollIndex"></param>
+    /// <param name="cellCenterOffsetPos"></param>
+    private void OnCellVisibleScroll(int cellIndex, GameObject cellInstance, float currentScrollIndex, float cellCenterOffsetPos)
     {
         //Debug.Log($"CellIndex:{cellindex} currentscrollindex:{currentscrollindex} cellcenteroffsetposition:{cellcenteroffsetposition}");
-        var gallerydemocell = cellinstance.GetComponent<GalleryDemoCell>();
-        if (gallerydemocell == null)
+        var galleryDemoCell = cellInstance.GetComponent<GalleryDemoCell>();
+        if (galleryDemoCell == null)
         {
-            gallerydemocell = cellinstance.AddComponent<GalleryDemoCell>();
+            galleryDemoCell = cellInstance.AddComponent<GalleryDemoCell>();
         }
-        var cellcenteroffsetabsposition = Mathf.Abs(cellcenteroffsetposition);
-        var newscale = 1 - cellcenteroffsetabsposition / 800;
-        var newalpha = 1 - cellcenteroffsetabsposition / 800;
-        gallerydemocell.updateScaleAndAlpha(newscale, newalpha);
+        var cellCenterOffsetAbsPos = Mathf.Abs(cellCenterOffsetPos);
+        var newScale = 1 - cellCenterOffsetAbsPos / 800;
+        var newAlpha = 1 - cellCenterOffsetAbsPos / 800;
+        galleryDemoCell.UpdateScaleAndAlpha(newScale, newAlpha);
     }
 }

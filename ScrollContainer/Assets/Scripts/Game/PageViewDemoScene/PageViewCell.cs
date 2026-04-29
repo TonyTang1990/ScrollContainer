@@ -31,27 +31,27 @@ public class PageViewCell : MonoBehaviour
     /// <summary>
     /// Initialization
     /// </summary>
-    /// <param name="cellindex"></param>
-    public void init(int cellindex)
+    /// <param name="cellIndex"></param>
+    public void Init(int cellIndex)
     {
-        TxtPageIndex.text = $"Page Index:{cellindex}";
-        PageViewNestedContainer.unbindContainerCallBack();
-        PageViewNestedContainer.bindContainerCallBack(onCellShow);
-        PageViewNestedContainer.setCellDatasByCellCount(9);
+        TxtPageIndex.text = $"Page Index:{cellIndex}";
+        PageViewNestedContainer.UnbindContainerCallBack();
+        PageViewNestedContainer.BindContainerCallBack(OnCellShow);
+        PageViewNestedContainer.SetCellCount(9);
     }
 
     /// <summary>
     /// 单元格显示
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    private void onCellShow(int cellindex, GameObject cellinstance)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    private void OnCellShow(int cellIndex, GameObject cellInstance)
     {
-        var toptobottomcell = cellinstance.GetComponent<ShowCellIndexCell>();
-        if (toptobottomcell == null)
+        var showCellIndexCell = cellInstance.GetComponent<ShowCellIndexCell>();
+        if (showCellIndexCell == null)
         {
-            toptobottomcell = cellinstance.AddComponent<ShowCellIndexCell>();
+            showCellIndexCell = cellInstance.AddComponent<ShowCellIndexCell>();
         }
-        toptobottomcell.init(cellindex);
+        showCellIndexCell.Init(cellIndex);
     }
 }

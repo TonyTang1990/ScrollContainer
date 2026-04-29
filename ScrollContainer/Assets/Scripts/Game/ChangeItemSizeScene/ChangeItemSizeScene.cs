@@ -28,15 +28,15 @@ public class ChangeItemSizeScene : MonoBehaviour
 
     void Start()
     {
-        BtnBackToMainMenu.onClick.AddListener(onBtnBackToMainMenu);
-        ChangeItemSizeContainer.bindContainerCallBack(onCellShow);
-        ChangeItemSizeContainer.setCellDatasByCellCount(20);
+        BtnBackToMainMenu.onClick.AddListener(OnBtnBackToMainMenu);
+        ChangeItemSizeContainer.BindContainerCallBack(OnCellShow);
+        ChangeItemSizeContainer.SetCellCount(20);
     }
 
     /// <summary>
     /// 返回主界面
     /// </summary>
-    private void onBtnBackToMainMenu()
+    private void OnBtnBackToMainMenu()
     {
         SceneManager.LoadScene(SceneNameDef.LauncherScene);
     }
@@ -44,15 +44,15 @@ public class ChangeItemSizeScene : MonoBehaviour
     /// <summary>
     /// 单元格显示回调
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    private void onCellShow(int cellindex, GameObject cellinstance)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    private void OnCellShow(int cellIndex, GameObject cellInstance)
     {
-        var changeitemsizecell = cellinstance.GetComponent<ChangeItemSizeCell>();
-        if (changeitemsizecell == null)
+        var changeItemSizeCell = cellInstance.GetComponent<ChangeItemSizeCell>();
+        if (changeItemSizeCell == null)
         {
-            changeitemsizecell = cellinstance.AddComponent<ChangeItemSizeCell>();
+            changeItemSizeCell = cellInstance.AddComponent<ChangeItemSizeCell>();
         }
-        changeitemsizecell.init(cellindex, ChangeItemSizeContainer);
+        changeItemSizeCell.init(cellIndex, ChangeItemSizeContainer);
     }
 }

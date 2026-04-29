@@ -121,36 +121,36 @@ public class SpinDatePickerScene : MonoBehaviour
         }
         mDayPrefabIndexList = new List<int>();
 
-        BtnBackToMainMenu.onClick.AddListener(onBtnBackToMainMenu);
+        BtnBackToMainMenu.onClick.AddListener(OnBtnBackToMainMenu);
 
-        VerticalYearContainer.bindContainerCallBack(onCellYearShow, null, null, onCellYearMoveTo);
-        VerticalYearContainer.setCellDatasByDataList(mYearhPrefabIndexList);
+        VerticalYearContainer.BindContainerCallBack(OnCellYearShow, null, null, OnCellYearMoveTo);
+        VerticalYearContainer.SetCellDatas(mYearhPrefabIndexList);
 
-        VerticalMonthContainer.bindContainerCallBack(onCellMonthShow, null, null, onCellMonthMoveTo);
-        VerticalMonthContainer.setCellDatasByDataList(mMonthPrefabIndexList);
+        VerticalMonthContainer.BindContainerCallBack(OnCellMonthShow, null, null, OnCellMonthMoveTo);
+        VerticalMonthContainer.SetCellDatas(mMonthPrefabIndexList);
 
-        VerticalDayContainer.bindContainerCallBack(onCellDayShow, null, null, onCellDayMoveTo);
-        updateDayContainerView();
+        VerticalDayContainer.BindContainerCallBack(OnCellDayShow, null, null, OnCellDayMoveTo);
+        UpdateDayContainerView();
 
-        updateDateChosenView();
+        UpdateDateChosenView();
 
         // Make sure current date is default chosen view
-        VerticalMonthContainer.moveToIndex(mCurrentChosenDateTime.Month - 1, 0f);
-        VerticalDayContainer.moveToIndex(mCurrentChosenDateTime.Day - 1, 0f);
+        VerticalMonthContainer.MoveToIndex(mCurrentChosenDateTime.Month - 1, 0f);
+        VerticalDayContainer.MoveToIndex(mCurrentChosenDateTime.Day - 1, 0f);
     }
 
     /// <summary>
     /// Update Day COntainer Data
     /// 更新日期容器数据
     /// </summary>
-    private void updateDayContainerData()
+    private void UpdateDayContainerData()
     {
         mDayPrefabIndexList.Clear();
-        var monthtotaldaynumber = DateTime.DaysInMonth(mCurrentChosenDateTime.Year, mCurrentChosenDateTime.Month);
+        var monthTotalDayNum = DateTime.DaysInMonth(mCurrentChosenDateTime.Year, mCurrentChosenDateTime.Month);
         // Insert two empty cell
-        for (int i = 0; i < monthtotaldaynumber + 2; i++)
+        for (int i = 0; i < monthTotalDayNum + 2; i++)
         {
-            if (i == 0 || i == monthtotaldaynumber + 1)
+            if (i == 0 || i == monthTotalDayNum + 1)
             {
                 mDayPrefabIndexList.Add(1);
             }
@@ -165,16 +165,16 @@ public class SpinDatePickerScene : MonoBehaviour
     /// Update Day Container View
     /// 更新日期选择容器显示
     /// </summary>
-    private void updateDayContainerView()
+    private void UpdateDayContainerView()
     {
-        updateDayContainerData();
-        VerticalDayContainer.setCellDatasByDataList(mDayPrefabIndexList);
+        UpdateDayContainerData();
+        VerticalDayContainer.SetCellDatas(mDayPrefabIndexList);
     }
 
     /// <summary>
     /// Update Date Chosen Text View
     /// </summary>
-    private void updateDateChosenView()
+    private void UpdateDateChosenView()
     {
         TxtDateChosen.text = mCurrentChosenDateTime.ToShortDateString();
     }
@@ -182,7 +182,7 @@ public class SpinDatePickerScene : MonoBehaviour
     /// <summary>
     /// 返回主界面
     /// </summary>
-    private void onBtnBackToMainMenu()
+    private void OnBtnBackToMainMenu()
     {
         SceneManager.LoadScene(SceneNameDef.LauncherScene);
     }
@@ -190,58 +190,58 @@ public class SpinDatePickerScene : MonoBehaviour
     /// <summary>
     /// 年单元格显示回调
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    private void onCellYearShow(int cellindex, GameObject cellinstance)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    private void OnCellYearShow(int cellIndex, GameObject cellInstance)
     {
-        updateYearCellView(cellindex, cellinstance);
+        UpdateYearCellView(cellIndex, cellInstance);
     }
 
     /// <summary>
     /// 年单元格滚动到指定单元格回调
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    private void onCellYearMoveTo(int cellindex, GameObject cellinstance)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    private void OnCellYearMoveTo(int cellIndex, GameObject cellInstance)
     {
-        var newyear = mNowDateTime.Year + cellindex;
-        var newyearindex = cellindex + 1;
-        if (newyear != mCurrentChosenDateTime.Year)
+        var newYear = mNowDateTime.Year + cellIndex;
+        var newYearIndex = cellIndex + 1;
+        if (newYear != mCurrentChosenDateTime.Year)
         {
-            var oldyearindex = mCurrentChosenDateTime.Year - mNowDateTime.Year + 1;
-            var isdaycontainerneedupdate = isDayContainerNeedUpdate(newyear, mCurrentChosenDateTime.Month, mCurrentChosenDateTime.Year, mCurrentChosenDateTime.Month);
-            mCurrentChosenDateTime = new DateTime(newyear, mCurrentChosenDateTime.Month, isdaycontainerneedupdate ? 1 : mCurrentChosenDateTime.Day);
-            if(isdaycontainerneedupdate)
+            var oldYearIndex = mCurrentChosenDateTime.Year - mNowDateTime.Year + 1;
+            var isDayContainerNeedUpdate = this.isDayContainerNeedUpdate(newYear, mCurrentChosenDateTime.Month, mCurrentChosenDateTime.Year, mCurrentChosenDateTime.Month);
+            mCurrentChosenDateTime = new DateTime(newYear, mCurrentChosenDateTime.Month, isDayContainerNeedUpdate ? 1 : mCurrentChosenDateTime.Day);
+            if(isDayContainerNeedUpdate)
             {
-                updateDayContainerView();
+                UpdateDayContainerView();
             }
-            updateDateChosenView();
-            var oldyearcelldata = VerticalYearContainer.getCellDataWithIndex(oldyearindex);
-            if (oldyearcelldata.isVisible())
+            UpdateDateChosenView();
+            var oldYearCellData = VerticalYearContainer.GetCellData(oldYearIndex);
+            if (oldYearCellData.IsVisible())
             {
-                updateDayCellView(oldyearindex, oldyearcelldata.CellGO);
+                UpdateDayCellView(oldYearIndex, oldYearCellData.CellGO);
             }
-            var newyearcelldata = VerticalYearContainer.getCellDataWithIndex(newyearindex);
-            updateYearCellView(newyearindex, newyearcelldata.CellGO);
+            var newYearCellData = VerticalYearContainer.GetCellData(newYearIndex);
+            UpdateYearCellView(newYearIndex, newYearCellData.CellGO);
         }
     }
 
     /// <summary>
     /// 更新指定年份单元格显示
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    private void updateYearCellView(int cellindex, GameObject cellinstance)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    private void UpdateYearCellView(int cellIndex, GameObject cellInstance)
     {
-        if (cellindex != 0 && cellindex != YearChosenOffset + 1)
+        if (cellIndex != 0 && cellIndex != YearChosenOffset + 1)
         {
-            var newyearoffset = cellindex - 1;
-            var datepickercell = cellinstance.GetComponent<DatePickerCell>();
-            if (datepickercell == null)
+            var newYearOffset = cellIndex - 1;
+            var datePickerCell = cellInstance.GetComponent<DatePickerCell>();
+            if (datePickerCell == null)
             {
-                datepickercell = cellinstance.AddComponent<DatePickerCell>();
+                datePickerCell = cellInstance.AddComponent<DatePickerCell>();
             }
-            datepickercell.init(cellindex, mNowDateTime.Year + newyearoffset, EDateType.Year, mCurrentChosenDateTime.Year == (mNowDateTime.Year + newyearoffset));
+            datePickerCell.Init(cellIndex, mNowDateTime.Year + newYearOffset, EDateType.Year, mCurrentChosenDateTime.Year == (mNowDateTime.Year + newYearOffset));
         }
     }
 
@@ -250,7 +250,7 @@ public class SpinDatePickerScene : MonoBehaviour
     /// </summary>
     /// <param name="cellindex"></param>
     /// <param name="cellinstance"></param>
-    private void onCellMonthShow(int cellindex, GameObject cellinstance)
+    private void OnCellMonthShow(int cellindex, GameObject cellinstance)
     {
         updateMonthCellView(cellindex, cellinstance);
     }
@@ -260,7 +260,7 @@ public class SpinDatePickerScene : MonoBehaviour
     /// </summary>
     /// <param name="cellindex"></param>
     /// <param name="cellinstance"></param>
-    private void onCellMonthMoveTo(int cellindex, GameObject cellinstance)
+    private void OnCellMonthMoveTo(int cellindex, GameObject cellinstance)
     {
         var newmonth = cellindex + 1;
         if (newmonth != mCurrentChosenDateTime.Month)
@@ -270,15 +270,15 @@ public class SpinDatePickerScene : MonoBehaviour
             mCurrentChosenDateTime = new DateTime(mCurrentChosenDateTime.Year, newmonth, isdaycontainerneedupdate ? 1 : mCurrentChosenDateTime.Day);
             if (isdaycontainerneedupdate)
             {
-                updateDayContainerView();
+                UpdateDayContainerView();
             }
-            updateDateChosenView();
-            var oldmonthcelldata = VerticalMonthContainer.getCellDataWithIndex(oldmonth);
-            if (oldmonthcelldata.isVisible())
+            UpdateDateChosenView();
+            var oldmonthcelldata = VerticalMonthContainer.GetCellData(oldmonth);
+            if (oldmonthcelldata.IsVisible())
             {
-                updateDayCellView(oldmonth, oldmonthcelldata.CellGO);
+                UpdateDayCellView(oldmonth, oldmonthcelldata.CellGO);
             }
-            var newmonthcelldata = VerticalMonthContainer.getCellDataWithIndex(newmonth);
+            var newmonthcelldata = VerticalMonthContainer.GetCellData(newmonth);
             updateMonthCellView(newmonth, newmonthcelldata.CellGO);
         }
     }
@@ -298,7 +298,7 @@ public class SpinDatePickerScene : MonoBehaviour
             {
                 datepickercell = cellinstance.AddComponent<DatePickerCell>();
             }
-            datepickercell.init(cellindex, cellmonth, EDateType.Month, mCurrentChosenDateTime.Month == cellmonth);
+            datepickercell.Init(cellindex, cellmonth, EDateType.Month, mCurrentChosenDateTime.Month == cellmonth);
         }
     }
 
@@ -307,9 +307,9 @@ public class SpinDatePickerScene : MonoBehaviour
     /// </summary>
     /// <param name="cellindex"></param>
     /// <param name="cellinstance"></param>
-    private void onCellDayShow(int cellindex, GameObject cellinstance)
+    private void OnCellDayShow(int cellindex, GameObject cellinstance)
     {
-        updateDayCellView(cellindex, cellinstance);
+        UpdateDayCellView(cellindex, cellinstance);
     }
 
     /// <summary>
@@ -317,21 +317,21 @@ public class SpinDatePickerScene : MonoBehaviour
     /// </summary>
     /// <param name="cellindex"></param>
     /// <param name="cellinstance"></param>
-    private void onCellDayMoveTo(int cellindex, GameObject cellinstance)
+    private void OnCellDayMoveTo(int cellindex, GameObject cellinstance)
     {
         var newday = cellindex + 1;
         if(newday != mCurrentChosenDateTime.Day)
         {
             var oldday = mCurrentChosenDateTime.Day;
             mCurrentChosenDateTime = new DateTime(mCurrentChosenDateTime.Year, mCurrentChosenDateTime.Month, newday);
-            updateDateChosenView();
-            var olddaycelldata = VerticalDayContainer.getCellDataWithIndex(oldday);
-            if(olddaycelldata.isVisible())
+            UpdateDateChosenView();
+            var olddaycelldata = VerticalDayContainer.GetCellData(oldday);
+            if(olddaycelldata.IsVisible())
             {
-                updateDayCellView(oldday, olddaycelldata.CellGO);
+                UpdateDayCellView(oldday, olddaycelldata.CellGO);
             }
-            var newdaycelldata = VerticalDayContainer.getCellDataWithIndex(newday);
-            updateDayCellView(newday, newdaycelldata.CellGO);
+            var newdaycelldata = VerticalDayContainer.GetCellData(newday);
+            UpdateDayCellView(newday, newdaycelldata.CellGO);
         }
     }
 
@@ -340,7 +340,7 @@ public class SpinDatePickerScene : MonoBehaviour
     /// </summary>
     /// <param name="cellindex"></param>
     /// <param name="cellinstance"></param>
-    private void updateDayCellView(int cellindex, GameObject cellinstance)
+    private void UpdateDayCellView(int cellindex, GameObject cellinstance)
     {
         var monthtotaldaynumber = DateTime.DaysInMonth(mCurrentChosenDateTime.Year, mCurrentChosenDateTime.Month);
         if (cellindex != 0 && cellindex != monthtotaldaynumber + 1)
@@ -351,7 +351,7 @@ public class SpinDatePickerScene : MonoBehaviour
             {
                 datepickercell = cellinstance.AddComponent<DatePickerCell>();
             }
-            datepickercell.init(cellindex, cellday, EDateType.Day, mCurrentChosenDateTime.Day == cellday);
+            datepickercell.Init(cellindex, cellday, EDateType.Day, mCurrentChosenDateTime.Day == cellday);
         }
     }
 

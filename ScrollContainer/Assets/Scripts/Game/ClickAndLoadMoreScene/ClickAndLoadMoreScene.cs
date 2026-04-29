@@ -31,7 +31,7 @@ public class ClickAndLoadMoreScene : MonoBehaviour
     void Start()
     {
         BtnBackToMainMenu.onClick.AddListener(onBtnBackToMainMenu);
-        ClickAndLoadMoreContainer.bindContainerCallBack(onCellShow);
+        ClickAndLoadMoreContainer.BindContainerCallBack(OnCellShow);
         var prefabindexlist = new List<int>();
         for(int i = 0; i < 20; i++)
         {
@@ -44,7 +44,7 @@ public class ClickAndLoadMoreScene : MonoBehaviour
                 prefabindexlist.Add(1);
             }
         }
-        ClickAndLoadMoreContainer.setCellDatasByDataList(prefabindexlist);
+        ClickAndLoadMoreContainer.SetCellDatas(prefabindexlist);
     }
 
     /// <summary>
@@ -58,28 +58,28 @@ public class ClickAndLoadMoreScene : MonoBehaviour
     /// <summary>
     /// 单元格显示回调
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    private void onCellShow(int cellindex, GameObject cellinstance)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    private void OnCellShow(int cellIndex, GameObject cellInstance)
     {
-        var totalcellcount = ClickAndLoadMoreContainer.getCellTotalCount();
-        if(cellindex != (totalcellcount - 1))
+        var totalCellCount = ClickAndLoadMoreContainer.GetCellTotalCount();
+        if(cellIndex != (totalCellCount - 1))
         {
-            var showcellindexcell = cellinstance.GetComponent<ShowCellIndexCell>();
-            if (showcellindexcell == null)
+            var showCellIndexCell = cellInstance.GetComponent<ShowCellIndexCell>();
+            if (showCellIndexCell == null)
             {
-                showcellindexcell = cellinstance.AddComponent<ShowCellIndexCell>();
+                showCellIndexCell = cellInstance.AddComponent<ShowCellIndexCell>();
             }
-            showcellindexcell.init(cellindex);
+            showCellIndexCell.Init(cellIndex);
         }
         else
         {
-            var clickloadmorecell = cellinstance.GetComponent<ClickLoadMoreCell>();
-            if (clickloadmorecell == null)
+            var clickLoadMoreCell = cellInstance.GetComponent<ClickLoadMoreCell>();
+            if (clickLoadMoreCell == null)
             {
-                clickloadmorecell = cellinstance.AddComponent<ClickLoadMoreCell>();
+                clickLoadMoreCell = cellInstance.AddComponent<ClickLoadMoreCell>();
             }
-            clickloadmorecell.init(cellindex, ClickAndLoadMoreContainer);
+            clickLoadMoreCell.Init(cellIndex, ClickAndLoadMoreContainer);
         }
     }
 }

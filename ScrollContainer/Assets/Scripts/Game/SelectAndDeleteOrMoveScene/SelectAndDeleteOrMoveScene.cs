@@ -59,19 +59,19 @@ public class SelectAndDeleteOrMoveScene : MonoBehaviour
     {
         mInputFiledCellIndex = 0;
         IFCellIndex.text = mInputFiledCellIndex.ToString();
-        BtnBackToMainMenu.onClick.AddListener(onBtnBackToMainMenu);
-        BtnInsertCell.onClick.AddListener(onBtnInsertCell);
-        BtnDeleteCell.onClick.AddListener(onBtnDeleteCell);
-        BtnMoveToCell.onClick.AddListener(onBtnMoveToCell);
-        SelectAndDeleteOrMoveContainer.bindContainerCallBack(onCellShow);
-        SelectAndDeleteOrMoveContainer.setCellDatasByCellCount(20);
+        BtnBackToMainMenu.onClick.AddListener(OnBtnBackToMainMenu);
+        BtnInsertCell.onClick.AddListener(OnBtnInsertCell);
+        BtnDeleteCell.onClick.AddListener(OnBtnDeleteCell);
+        BtnMoveToCell.onClick.AddListener(OnBtnMoveToCell);
+        SelectAndDeleteOrMoveContainer.BindContainerCallBack(OnCellShow);
+        SelectAndDeleteOrMoveContainer.SetCellCount(20);
     }
 
     /// <summary>
     /// Parse Cell Index in Input field 
     /// 解析单元格参数输入
     /// </summary>
-    private bool parseCellIndexInput()
+    private bool ParseCellIndexInput()
     {
         if(int.TryParse(IFCellIndex.text, out mInputFiledCellIndex))
         {
@@ -88,7 +88,7 @@ public class SelectAndDeleteOrMoveScene : MonoBehaviour
     /// <summary>
     /// 返回主界面
     /// </summary>
-    private void onBtnBackToMainMenu()
+    private void OnBtnBackToMainMenu()
     {
         SceneManager.LoadScene(SceneNameDef.LauncherScene);
     }
@@ -97,12 +97,12 @@ public class SelectAndDeleteOrMoveScene : MonoBehaviour
     /// Insert Cell With Cell Index
     /// 插入指定位置单元格
     /// </summary>
-    private void onBtnInsertCell()
+    private void OnBtnInsertCell()
     {
-        if(parseCellIndexInput())
+        if(ParseCellIndexInput())
         {
-            var newcelldata = SelectAndDeleteOrMoveContainer.createNormalCellData();
-            SelectAndDeleteOrMoveContainer.addCellDataWithIndex(newcelldata, mInputFiledCellIndex);
+            var newCellData = SelectAndDeleteOrMoveContainer.CreateCellData();
+            SelectAndDeleteOrMoveContainer.AddCellDataWithIndex(newCellData, mInputFiledCellIndex);
         }
     }
 
@@ -110,11 +110,11 @@ public class SelectAndDeleteOrMoveScene : MonoBehaviour
     /// Delete Specific Cell Index
     /// 删除指定位置单元格
     /// </summary>
-    private void onBtnDeleteCell()
+    private void OnBtnDeleteCell()
     {
-        if (parseCellIndexInput())
+        if (ParseCellIndexInput())
         {
-            SelectAndDeleteOrMoveContainer.removeCellWithIndex(mInputFiledCellIndex);
+            SelectAndDeleteOrMoveContainer.RemoveCellIndex(mInputFiledCellIndex);
         }
     }
 
@@ -122,26 +122,27 @@ public class SelectAndDeleteOrMoveScene : MonoBehaviour
     /// Move To Specific Cell Index
     /// 移动到指定位置单元格
     /// </summary>
-    private void onBtnMoveToCell()
+    private void OnBtnMoveToCell()
     {
-        if (parseCellIndexInput())
+        if (ParseCellIndexInput())
         {
-            SelectAndDeleteOrMoveContainer.moveToIndex(mInputFiledCellIndex);
+            SelectAndDeleteOrMoveContainer.MoveToIndex(mInputFiledCellIndex, 0f);
         }
     }
 
     /// <summary>
     /// 单元格显示回调
     /// </summary>
-    /// <param name="cellindex"></param>
-    /// <param name="cellinstance"></param>
-    private void onCellShow(int cellindex, GameObject cellinstance)
+    /// <param name="cellIndex"></param>
+    /// <param name="cellInstance"></param>
+    private void OnCellShow(int cellIndex, GameObject cellInstance)
     {
-        var toptobottomcell = cellinstance.GetComponent<ShowCellIndexCell>();
-        if (toptobottomcell == null)
+        Debug.Log($"OnCellShow CellIndex:{cellIndex}");
+        var showCellIndexCell = cellInstance.GetComponent<ShowCellIndexCell>();
+        if (showCellIndexCell == null)
         {
-            toptobottomcell = cellinstance.AddComponent<ShowCellIndexCell>();
+            showCellIndexCell = cellInstance.AddComponent<ShowCellIndexCell>();
         }
-        toptobottomcell.init(cellindex);
+        showCellIndexCell.Init(cellIndex);
     }
 }
