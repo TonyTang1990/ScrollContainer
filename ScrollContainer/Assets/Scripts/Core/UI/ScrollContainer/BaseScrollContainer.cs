@@ -373,8 +373,8 @@ namespace TH.Modules.UI
             mCellTemplateInstanceIDList = new List<int>();
             for (int i = 0, length = SourcePrefabList.Count; i < length; i++)
             {
-                var prefabsize = SourcePrefabList[i].GetComponent<RectTransform>().rect.size;
-                mCellTemplateSizeList.Add(prefabsize);
+                var prefabSize = SourcePrefabList[i].GetComponent<RectTransform>().rect.size;
+                mCellTemplateSizeList.Add(prefabSize);
                 mCellTemplateInstanceIDList.Add(SourcePrefabList[i].GetInstanceID());
             }
         }
@@ -679,8 +679,7 @@ namespace TH.Modules.UI
         /// <returns>返回清除单元格数据时最终停留(如果开启矫正，则为矫正后位置)的滚动位置</returns>
         public Vector2 ClearCellDatas()
         {
-            var finalScrollNormalizedPos = Vector2.zero;
-            finalScrollNormalizedPos = ScrollRect.normalizedPosition;
+            var finalScrollNormalizedPos = ScrollRect.normalizedPosition;
             if (mCellDatas != null)
             {
                 // 调整容器数据时，强行停止滚动相关操作，避免刷新或进池出池等带来的过多问题
@@ -737,6 +736,19 @@ namespace TH.Modules.UI
             {
                 return null;
             }
+        }
+ /// <summary>
+        /// Add with index
+        /// 指定位子添加单元格数据
+        /// </summary>
+        /// <param name="index">单元格添加位置索引</param>
+        /// <param name="prefabIndex">模板索引</param>
+        /// <param name="size">单元格大小</param>
+        /// <returns></returns>
+        public bool AddCellWithIndex(int index = 0, int prefabIndex = 0, Vector2? size = null)
+        {
+            var cellData = CreateCellData(prefabIndex, size);
+            return AddCellDataWithIndex(cellData, index);
         }
 
         /// <summary>
