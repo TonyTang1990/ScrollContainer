@@ -1334,7 +1334,7 @@ namespace TH.Modules.UI
                 Debug.LogError($"容器:{gameObject.name}单元格数据总数量:{SourcePrefabList.Count},预制件索引:{prefabIndex}超出范围!");
                 return null;
             }
-            var cell = ObjectPool.Singleton.pop<CellData>();
+            var cell = ObjectPool.Singleton.Pop<CellData>();
             cell.SetData(prefabIndex, this, size);
             return cell;
         }
@@ -1361,7 +1361,7 @@ namespace TH.Modules.UI
                     Debug.LogError($"容器:{gameObject.name}单元格数据总数量:{SourcePrefabList.Count},预制件索引:{prefabIndex}超出范围!");
                     return null;
                 }
-                var cell = ObjectPool.Singleton.pop<CellData>();
+                var cell = ObjectPool.Singleton.Pop<CellData>();
                 Vector2? sizeValue = null;
                 if(cellSizeList != null)
                 {
@@ -1394,7 +1394,7 @@ namespace TH.Modules.UI
             var cellDataList = new List<CellData>();
             for (int i = 0; i < cellCount; i++)
             {
-                var cell = ObjectPool.Singleton.pop<CellData>();
+                var cell = ObjectPool.Singleton.Pop<CellData>();
                 Vector2? sizeValue = null;
                 if (cellSizeList != null)
                 {

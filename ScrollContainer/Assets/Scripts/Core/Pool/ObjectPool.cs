@@ -54,14 +54,14 @@ public class ObjectPool
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="number"></param>
-    public void initialize<T>(int number) where T : IRecycle
+    public void Initialize<T>(int number) where T : IRecycle
     {
         for(int i = 0; i < number; i++)
         {
             var obj = Activator.CreateInstance<T>();
-            push<T>(obj);
+            Push<T>(obj);
         }
-        var hashcode = typeof(T).GetHashCode();
+        //var hashcode = typeof(T).GetHashCode();
         //Debug.Log(string.Format("初始化类型:{0}的剩余数量:{1}", typeof(T).Name, ObjectPoolMap[hashcode].Count));
     }
 
@@ -70,15 +70,15 @@ public class ObjectPool
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="obj"></param>
-    public void push<T>(T obj) where T : IRecycle
+    public void Push<T>(T obj) where T : IRecycle
     {
         obj.onDispose();
-        var hashcode = typeof(T).GetHashCode();
-        if(!ObjectPoolMap.ContainsKey(hashcode))
+        var hashCode = typeof(T).GetHashCode();
+        if(!ObjectPoolMap.ContainsKey(hashCode))
         {
-            ObjectPoolMap.Add(hashcode, new Stack<IRecycle>());
+            ObjectPoolMap.Add(hashCode, new Stack<IRecycle>());
         }
-        ObjectPoolMap[hashcode].Push(obj);
+        ObjectPoolMap[hashCode].Push(obj);
         //Debug.Log(string.Format("类型:{0}进对象池!",typeof(T).Name));
         //Debug.Log(string.Format("池里类型:{0}的剩余数量:{1}", typeof(T).Name, ObjectPoolMap[hashcode].Count));
     }
@@ -88,18 +88,18 @@ public class ObjectPool
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public T pop<T>() where T : IRecycle
+    public T Pop<T>() where T : IRecycle
     {
-        var hashcode = typeof(T).GetHashCode();
-        if (ObjectPoolMap.ContainsKey(hashcode))
+        var hashCode = typeof(T).GetHashCode();
+        if (ObjectPoolMap.ContainsKey(hashCode))
         {
-            var instance = ObjectPoolMap[hashcode].Pop();
+            var instance = ObjectPoolMap[hashCode].Pop();
             instance.onCreate();
             //Debug.Log(string.Format("类型:{0}出对象池!", typeof(T).Name));
             //Debug.Log(string.Format("池里类型:{0}的剩余数量:{1}", typeof(T).Name, ObjectPoolMap[hashcode].Count));
-            if (ObjectPoolMap[hashcode].Count == 0)
+            if (ObjectPoolMap[hashCode].Count == 0)
             {
-                clear<T>();
+                Clear<T>();
             }
             return (T)instance;
         }
@@ -119,17 +119,17 @@ public class ObjectPool
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public bool clear<T>() where T : IRecycle
+    public bool Clear<T>() where T : IRecycle
     {
-        var hashcode = typeof(T).GetHashCode();
-        if(ObjectPoolMap.ContainsKey(hashcode))
+        var hashCode = typeof(T).GetHashCode();
+        if(ObjectPoolMap.ContainsKey(hashCode))
         {
             //Debug.Log(string.Format("清除对象池里的类型:{0}", typeof(T).Name));
-            foreach(var obj in ObjectPoolMap[hashcode])
+            foreach(var obj in ObjectPoolMap[hashCode])
             {
                 obj.onDispose();
             }
-            ObjectPoolMap.Remove(hashcode);
+            ObjectPoolMap.Remove(hashCode);
             return true;
         }
         else
@@ -141,13 +141,13 @@ public class ObjectPool
     /// <summary>
     /// 清除所有对象缓存
     /// </summary>
-    public void clearAll()
+    public void ClearAll()
     {
-        var objhascodearray = new int[ObjectPoolMap.Keys.Count];
-        ObjectPoolMap.Keys.CopyTo(objhascodearray, 0);
-        foreach (var objhashcode in objhascodearray)
+        var objHasCodeArray = new int[ObjectPoolMap.Keys.Count];
+        ObjectPoolMap.Keys.CopyTo(objHasCodeArray, 0);
+        foreach (var objhashcode in objHasCodeArray)
         {
-            clear(objhashcode);
+            Clear(objhashcode);
         }
         ObjectPoolMap.Clear();
     }
@@ -157,16 +157,16 @@ public class ObjectPool
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    private bool clear(int hashcode)
+    private bool Clear(int hashCode)
     {
-        if (ObjectPoolMap.ContainsKey(hashcode))
+        if (ObjectPoolMap.ContainsKey(hashCode))
         {
             //Debug.Log(string.Format("清除对象池里的类型:{0}", typeof(T).Name));
-            foreach (var obj in ObjectPoolMap[hashcode])
+            foreach (var obj in ObjectPoolMap[hashCode])
             {
                 obj.onDispose();
             }
-            ObjectPoolMap.Remove(hashcode);
+            ObjectPoolMap.Remove(hashCode);
             return true;
         }
         else

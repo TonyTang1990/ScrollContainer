@@ -61,15 +61,15 @@ public class GameObjectPool
 
     }
 
-    public GameObjectPool(string parentname, EPoolStrategy poolstrategy = EPoolStrategy.CanvasGroup)
+    public GameObjectPool(string parentName, EPoolStrategy poolStrategy = EPoolStrategy.CanvasGroup)
     {
         if (mGameObjectPoolRoot == null)
         {
             mGameObjectPoolRoot = new GameObject("GameObjectPoolRoot");
             Object.DontDestroyOnLoad(mGameObjectPoolRoot);
         }
-        mParentName = string.IsNullOrEmpty(parentname) == false ? parentname : mDefaultParentName;
-        mGameObjectPoolStrategy = poolstrategy;
+        mParentName = string.IsNullOrEmpty(parentName) == false ? parentName : mDefaultParentName;
+        mGameObjectPoolStrategy = poolStrategy;
         mGameObjectPoolMap = new Dictionary<int, List<GameObject>>();
         mCurrentGameObjectPoolParent = mGameObjectPoolRoot.transform.Find(mParentName);
         mCurrentGameObjectPoolParent = mCurrentGameObjectPoolParent != null ? mCurrentGameObjectPoolParent : new GameObject(mParentName).transform;
@@ -78,10 +78,10 @@ public class GameObjectPool
         {
             if (mCurrentGameObjectPoolParent.gameObject.GetComponent<CanvasGroup>() == null)
             {
-                var canvasgroup = mCurrentGameObjectPoolParent.gameObject.AddComponent<CanvasGroup>();
-                canvasgroup.alpha = 0;
-                canvasgroup.interactable = false;
-                canvasgroup.blocksRaycasts = false;
+                var canvasGroup = mCurrentGameObjectPoolParent.gameObject.AddComponent<CanvasGroup>();
+                canvasGroup.alpha = 0;
+                canvasGroup.interactable = false;
+                canvasGroup.blocksRaycasts = false;
             }
         }
     }
@@ -95,11 +95,11 @@ public class GameObjectPool
     {
         if (template != null)
         {
-            var instanceid = template.GetInstanceID();
+            var instanceId = template.GetInstanceID();
             for (var i = 0; i < number; i++)
             {
                 var instance = GameObject.Instantiate<GameObject>(template);
-                Push(instanceid, instance);
+                Push(instanceId, instance);
             }
         }
     }
@@ -142,9 +142,9 @@ public class GameObjectPool
         }
         else
         {
-            var objectlist = new List<GameObject>();
-            objectlist.Add(instance);
-            mGameObjectPoolMap.Add(instanceId, objectlist);
+            var objectList = new List<GameObject>();
+            objectList.Add(instance);
+            mGameObjectPoolMap.Add(instanceId, objectList);
         }
     }
 
@@ -162,11 +162,11 @@ public class GameObjectPool
         }
         else
         {
-            var instanceid = template.GetInstanceID();
-            if (mGameObjectPoolMap.ContainsKey(instanceid) && mGameObjectPoolMap[instanceid].Count > 0)
+            var instanceId = template.GetInstanceID();
+            if (mGameObjectPoolMap.ContainsKey(instanceId) && mGameObjectPoolMap[instanceId].Count > 0)
             {
-                var instance = mGameObjectPoolMap[instanceid][0];
-                mGameObjectPoolMap[instanceid].RemoveAt(0);
+                var instance = mGameObjectPoolMap[instanceId][0];
+                mGameObjectPoolMap[instanceId].RemoveAt(0);
                 if (mGameObjectPoolStrategy == EPoolStrategy.Active)
                 {
                     instance.SetActive(true);

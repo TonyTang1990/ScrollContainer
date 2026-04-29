@@ -326,7 +326,7 @@ namespace TH.Modules.UI
             mCellSize = Vector2.zero;
             mRectPos = Vector2.zero;
             CellRect = Rect.zero;
-            ObjectPool.Singleton.push<CellData>(this);
+            ObjectPool.Singleton.Push<CellData>(this);
         }
     }
 }
