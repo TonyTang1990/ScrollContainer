@@ -448,6 +448,7 @@ namespace TH.Modules.UI
         {
             // 优先解绑，避免逻辑回调导致上层已经清理的情况出问题
             UnbindContainerCallBack();
+            KillMoveTweener();
             if (mCellDatas != null)
             {
                 for (int i = 0; i < mCellDatas.Count; i++)
@@ -481,7 +482,7 @@ namespace TH.Modules.UI
         /// <param name="moveTime">移动时长</param>
         public virtual bool MoveToIndex(int index = 0, float moveTime = 1.0f)
         {
-            mCellMoveToTweener?.Kill();
+            KillMoveTweener();
             return index >= 0 && index < mCellDatas.Count;
         }
 
@@ -1003,7 +1004,7 @@ namespace TH.Modules.UI
             //Debug.Log($"单元格容器:{gameObject.name}开始拖拽!");
             if (IsAutoScrollInteruptable == true)
             {
-                mCellMoveToTweener?.Kill();
+                KillMoveTweener();
                 mIsEndDrag = false;
                 if (CorrectCellPostionSwitch && mIsCorrectScrolling)
                 {
@@ -1099,7 +1100,7 @@ namespace TH.Modules.UI
             // 强制停止移动，确保单元格矫正和滚动相关逻辑正确完成
             ScrollRect.StopMovement();
             CheckCellPosCorrect(mCurrentScrollDir, true, false);
-            mCellMoveToTweener?.Kill(true);
+            KillMoveTweener(true);
         }
 
         /// <summary>
@@ -1317,6 +1318,16 @@ namespace TH.Modules.UI
                 }
             }
             mCellDatas[index].Clear();
+        }
+
+        /// <summary>
+        /// 停止移动Tweener
+        /// </summary>
+        /// <param name="complete"></param>
+        protected void KillMoveTweener(bool complete = false)
+        {
+            mCellMoveToTweener?.Kill(complete);
+            mCellMoveToTweener = null;
         }
 
         #region Create Cell Datas API(创建单元格数据接口)
