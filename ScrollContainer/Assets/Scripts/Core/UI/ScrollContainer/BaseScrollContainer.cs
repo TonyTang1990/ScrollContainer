@@ -605,7 +605,7 @@ namespace TH.Modules.UI
             }
             if (mIsCorrectDataComplete)
             {
-                // 记录前一次的容器大小和滚动比例
+                // 记录前一次的容器大小和滚动比例，用于在数据量变化后保留绝对滚动距离
                 var preContentSize = RectContentTrasform.sizeDelta;
                 var preScrollNormalizedPos = ScrollRect.normalizedPosition;
                 // 提前获取最新单元格数据的容器大小
@@ -617,15 +617,8 @@ namespace TH.Modules.UI
                 var finalScrollNormalizedPos = scrollNormalizedPos;
                 if (scrollNormalizedPos == null)
                 {
-                    // 比较前后两次容器大小来计算是否保持之前的相对比例滚动位置
-                    if (ShouldKeepAbsoluteScrollPos(preContentSize, newContentSize))
-                    {
-                        finalScrollNormalizedPos = CalculateNewNormalizedPos(preScrollNormalizedPos, preContentSize, newContentSize);
-                    }
-                    else
-                    {
-                        finalScrollNormalizedPos = preScrollNormalizedPos;
-                    }
+                    // 保留刷新前的绝对滚动距离；若新内容不足以容纳该距离，则夹紧到新滚动边界
+                    finalScrollNormalizedPos = CalculateNewNormalizedPos(preScrollNormalizedPos, preContentSize, newContentSize);
                 }
 
                 UpdateContainerData(finalScrollNormalizedPos);
@@ -638,33 +631,6 @@ namespace TH.Modules.UI
                 Debug.LogError($"组件:{this.gameObject.name}未完成矫正数据，不允许设置数据，请在Start里执行初始化流程!");
             }
             Display();
-        }
-
-        /// <summary>
-        /// Decide whether keep absolute content anchored position when rebuilding cells.
-        /// 当容器内容可滚动距离变大或保持不变时，保持绝对滚动位置；
-        /// 当可滚动距离变小时，走比例位置还原。
-        /// </summary>
-        protected virtual bool ShouldKeepAbsoluteScrollPos(Vector2 preContentSize, Vector2 newContentSize)
-        {
-            var viewportSize = mRootRectContentTrasform.rect.size;
-            var preScrollableX = Mathf.Max(0f, preContentSize.x - viewportSize.x);
-            var preScrollableY = Mathf.Max(0f, preContentSize.y - viewportSize.y);
-            var newScrollableX = Mathf.Max(0f, newContentSize.x - viewportSize.x);
-            var newScrollableY = Mathf.Max(0f, newContentSize.y - viewportSize.y);
-
-            if (ScrollRect.horizontal && !ScrollRect.vertical)
-            {
-                return newScrollableX >= preScrollableX;
-            }
-
-            if (ScrollRect.vertical && !ScrollRect.horizontal)
-            {
-                return newScrollableY >= preScrollableY;
-            }
-
-            // Fallback for unexpected mixed-axis scroll mode.
-            return newScrollableX >= preScrollableX && newScrollableY >= preScrollableY;
         }
 
         /// <summary>

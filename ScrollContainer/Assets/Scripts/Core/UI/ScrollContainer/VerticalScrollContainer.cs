@@ -197,14 +197,18 @@ namespace TH.Modules.UI
         {
             var viewportHeight = mRootRectContentTrasform.rect.height;
             var preScrollableDistance = Mathf.Max(0f, preContentSize.y - viewportHeight);
+            var preScolledPosYOffset = (1f - preScrollNormalizedPos.y) * preScrollableDistance;
+            // 如果之前已滚动的距离大于新的可滚动距离，那么就直接滚动到最底部
+            // 反之之前已滚动的距离小于新的可滚动距离，那么就保持该滚动距离算一个新的滚动比例
             var newScrollableDistance = Mathf.Max(0f, newContentSize.y - viewportHeight);
-            if (newScrollableDistance <= 0f)
+            if(preScolledPosYOffset >= newScrollableDistance)
             {
-                return preScrollNormalizedPos;
+                var startY = mIsReverse == false ? 0f : 1f;
+                return new Vector2(preScrollNormalizedPos.x, startY);
             }
 
-            var scale = Mathf.Clamp01(preScrollableDistance / newScrollableDistance);
-            var newY = mIsReverse == false ? 1f - (1f - preScrollNormalizedPos.y) * scale : preScrollNormalizedPos.y * scale;
+            var newScollNormalizedYPos = preScolledPosYOffset / newScrollableDistance;
+            var newY = mIsReverse == false ? (1f - newScollNormalizedYPos) : newScollNormalizedYPos;
             return new Vector2(preScrollNormalizedPos.x, Mathf.Clamp01(newY));
         }
 
