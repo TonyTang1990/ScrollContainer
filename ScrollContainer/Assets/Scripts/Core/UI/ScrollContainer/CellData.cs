@@ -149,12 +149,12 @@ namespace TH.Modules.UI
             private set;
         }
         
-        public void onCreate()
+        public void OnCreate()
         {
             //Debug.Log("NewCellData:onCreate()");
         }
 
-        public void onDispose()
+        public void OnRecycle()
         {
             //Debug.Log("NewCellData:onDispose()");
             CellIndex = -1;

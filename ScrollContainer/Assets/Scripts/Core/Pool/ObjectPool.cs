@@ -17,12 +17,12 @@ public interface IRecycle
     /// <summary>
     /// 创建时调用接口
     /// </summary>
-    void onCreate();
+    void OnCreate();
 
     /// <summary>
     /// 回收时调用接口
     /// </summary>
-    void onDispose();
+    void OnRecycle();
 }
 
 /// <summary>
@@ -72,7 +72,7 @@ public class ObjectPool
     /// <param name="obj"></param>
     public void Push<T>(T obj) where T : IRecycle
     {
-        obj.onDispose();
+        obj.OnRecycle();
         var hashCode = typeof(T).GetHashCode();
         if(!ObjectPoolMap.ContainsKey(hashCode))
         {
@@ -94,7 +94,7 @@ public class ObjectPool
         if (ObjectPoolMap.ContainsKey(hashCode))
         {
             var instance = ObjectPoolMap[hashCode].Pop();
-            instance.onCreate();
+            instance.OnCreate();
             //Debug.Log(string.Format("类型:{0}出对象池!", typeof(T).Name));
             //Debug.Log(string.Format("池里类型:{0}的剩余数量:{1}", typeof(T).Name, ObjectPoolMap[hashcode].Count));
             if (ObjectPoolMap[hashCode].Count == 0)
@@ -109,7 +109,7 @@ public class ObjectPool
             // 默认池里没有反射创建,尽量避免反射创建，
             // 可以考虑调用Initialize初始化一定数量进池
             var instance = Activator.CreateInstance<T>();
-            instance.onCreate();
+            instance.OnCreate();
             return instance;
         }
     }
@@ -127,7 +127,7 @@ public class ObjectPool
             //Debug.Log(string.Format("清除对象池里的类型:{0}", typeof(T).Name));
             foreach(var obj in ObjectPoolMap[hashCode])
             {
-                obj.onDispose();
+                obj.OnRecycle();
             }
             ObjectPoolMap.Remove(hashCode);
             return true;
@@ -164,7 +164,7 @@ public class ObjectPool
             //Debug.Log(string.Format("清除对象池里的类型:{0}", typeof(T).Name));
             foreach (var obj in ObjectPoolMap[hashCode])
             {
-                obj.onDispose();
+                obj.OnRecycle();
             }
             ObjectPoolMap.Remove(hashCode);
             return true;
