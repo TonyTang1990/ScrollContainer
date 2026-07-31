@@ -1,8 +1,8 @@
-ScrollContainer
+# ScrollContainer
 
 基于原生ScrollRect的一套滚动列表实现。
 
-## 功能支持:
+## 功能支持
 
 1. 支持4中单元格容器回调(OnShow--单元格显示时 OnMoveToIndex--单元格滚动或矫正到指定单元格时 OnVisibleScroll--单元格滚动过程中回调 OnHide--单元格隐藏或销毁回调)
 2. 滚动到指定单元格显示(支持滚动到指定位置)
@@ -71,11 +71,17 @@ ScrollContainer
 
 1. 仅横向和竖向单元格支持指定不同单元格大小，网格单元格不支持不同大小的单元格
 
-# 博客链接
+## 店铺
+
+觉得好用的可以购买淘宝商店版本支持作者：
+
+[ScrollContainer滚动列表(淘宝)](https://item.taobao.com/item.htm?id=1069395295167&mi_id=0000KsDdeHxSmE69X3ysKSAIBWcVZ1y7ldOdOQhOIIXAXT0&spm=0.0.0.0&xxc=shop&skuId=6285052318360)
+
+## 博客链接
 
 [Unity滚动列表](http://tonytang1990.github.io/2020/06/08/Unity滚动列表/)
 
-# 友情链接
+## 友情链接
 
 [LoopScrollRect](https://github.com/qiankanglai/LoopScrollRect)
 
