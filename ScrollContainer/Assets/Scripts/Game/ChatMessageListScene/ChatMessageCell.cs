@@ -33,7 +33,7 @@ public class ChatMessageCell : MonoBehaviour
     /// <param name="cellIndex"></param>
     /// <param name="useEmoji"></param>
     /// <param name="chatContent"></param>
-    public void init(int cellIndex, bool useEmoji, string chatContent)
+    public void Init(int cellIndex, bool useEmoji, string chatContent)
     {
         TxtChatContent.gameObject.SetActive(!useEmoji);
         ImgChatEmoji.gameObject.SetActive(useEmoji);

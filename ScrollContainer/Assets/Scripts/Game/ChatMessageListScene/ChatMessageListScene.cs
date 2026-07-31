@@ -101,6 +101,6 @@ public class ChatMessageListScene : MonoBehaviour
         {
             chatMessageCell = cellInstance.AddComponent<ChatMessageCell>();
         }
-        chatMessageCell.init(cellIndex, cellIndex % 3 == 2, mChatContentList[cellIndex]);
+        chatMessageCell.Init(cellIndex, cellIndex % 3 == 2, mChatContentList[cellIndex]);
     }
 }

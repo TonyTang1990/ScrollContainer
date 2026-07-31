@@ -55,7 +55,7 @@ public class ChangeItemSizeCell : MonoBehaviour
     /// Initialization
     /// </summary>
     /// <param name="cellIndex"></param>
-    public void init(int cellIndex, BaseScrollContainer ownerContainer)
+    public void Init(int cellIndex, BaseScrollContainer ownerContainer)
     {
         TxtCellContent.text = $"Cell Index:{cellIndex}";
         BtnChangeSize.onClick.RemoveAllListeners();

@@ -53,6 +53,6 @@ public class ChangeItemSizeScene : MonoBehaviour
         {
             changeItemSizeCell = cellInstance.AddComponent<ChangeItemSizeCell>();
         }
-        changeItemSizeCell.init(cellIndex, ChangeItemSizeContainer);
+        changeItemSizeCell.Init(cellIndex, ChangeItemSizeContainer);
     }
 }

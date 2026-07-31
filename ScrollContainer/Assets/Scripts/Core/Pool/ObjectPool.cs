@@ -54,11 +54,11 @@ public class ObjectPool
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="number"></param>
-    public void Initialize<T>(int number) where T : IRecycle
+    public void Initialize<T>(int number) where T : IRecycle, new()
     {
         for(int i = 0; i < number; i++)
         {
-            var obj = Activator.CreateInstance<T>();
+            var obj = new T();
             Push<T>(obj);
         }
         //var hashcode = typeof(T).GetHashCode();
@@ -88,7 +88,7 @@ public class ObjectPool
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    public T Pop<T>() where T : IRecycle
+    public T Pop<T>() where T : IRecycle, new()
     {
         var hashCode = typeof(T).GetHashCode();
         if (ObjectPoolMap.ContainsKey(hashCode))
@@ -108,7 +108,7 @@ public class ObjectPool
             //Debug.Log(string.Format("类型:{0}构建新的对象!", typeof(T).Name));
             // 默认池里没有反射创建,尽量避免反射创建，
             // 可以考虑调用Initialize初始化一定数量进池
-            var instance = Activator.CreateInstance<T>();
+            var instance = new T();
             instance.OnCreate();
             return instance;
         }
