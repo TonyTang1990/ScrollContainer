@@ -305,6 +305,7 @@ namespace TH.Modules.UI
                     OnCellDisplay(i);
                 }
                 CheckCellPosCorrect(mCurrentScrollDir);
+                mOnScrollDelegate?.Invoke(CurrentScrollIndexValue, mCurrentScrollDir);
             }
         }
 

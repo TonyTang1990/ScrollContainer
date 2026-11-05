@@ -290,6 +290,24 @@ namespace TH.Modules.UI
         protected Action<int, GameObject> mOnHideDelegate;
 
         /// <summary>
+        /// Drag Begin Delegate
+        /// 拖拽开始回调<当前滚动索引值(带小数)>
+        /// </summary>
+        protected Action<float> mOnBeginDragDelegate;
+
+        /// <summary>
+        /// Drag End Delegate
+        /// 拖拽结束回调<当前滚动索引值(带小数)>
+        /// </summary>
+        protected Action<float> mOnEndDragDelegate;
+
+        /// <summary>
+        /// Scroll Delegate
+        /// 拖拽中回调<当前滚动索引值(带小数), 滚动方向>
+        /// </summary>
+        protected Action<float, EScrollDir>  mOnScrollDelegate;
+
+        /// <summary>
         /// The max correct cell index value
         /// 最大矫正到单元格索引(仅当开启矫正时有用)
         /// </summary>
@@ -487,22 +505,48 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
+        /// 滚动到顶部
+        /// </summary>
+        public void MoveToTop()
+        {
+            MoveToIndex(0);
+        }
+
+        /// <summary>
+        /// 滚动到底部
+        /// </summary>
+        public void MoveToBottom()
+        {
+            var totalCellNum = GetCellTotalCount();
+            var lastCellIndex = Mathf.Max(totalCellNum - 1, 0);
+            MoveToIndex(lastCellIndex);
+        }
+
+        /// <summary>
         /// Bind container delegate
         /// 绑定单元格回调(此方法在使用单元格前比调)
         /// </summary>
-        /// <param name="onShow"></param>
-        /// <param name="onHide"></param>
-        /// <param name="onVisibleScroll"></param>
-        /// <param name="onMoveto"></param>
+        /// <param name="onShow">单元格显示回调</param>
+        /// <param name="onHide">单元格隐藏回调</param>
+        /// <param name="onVisibleScroll">可见单元格滚动显示回调</param>
+        /// <param name="onMoveto">移动到指定单元格回调</param>
+        /// <param name="onBeginDrag">拖拽开始回调</param>
+        /// <param name="onEndDrag">拖拽结束回调</param>
         public void BindContainerCallBack(Action<int, GameObject> onShow,
                                           Action<int, GameObject> onHide = null,
                                           Action<int, GameObject, float, float> onVisibleScroll = null,
-                                          Action<int, GameObject> onMoveto = null)
+                                          Action<int, GameObject> onMoveto = null,
+                                          Action<float> onBeginDrag = null,
+                                          Action<float> onEndDrag = null,
+                                          Action<float, EScrollDir> onScroll = null)
         {
             mOnShowDelegate = onShow;
             mOnVisibleScrollDelegate = onVisibleScroll;
             mMoveToIndexDelegate = onMoveto;
             mOnHideDelegate = onHide;
+            mOnBeginDragDelegate = onBeginDrag;
+            mOnEndDragDelegate = onEndDrag;
+            mOnScrollDelegate = onScroll;
         }
 
         /// <summary>
@@ -515,6 +559,9 @@ namespace TH.Modules.UI
             mOnVisibleScrollDelegate = null;
             mMoveToIndexDelegate = null;
             mOnHideDelegate = null;
+            mOnBeginDragDelegate = null;
+            mOnEndDragDelegate = null;
+            mOnScrollDelegate = null;
         }
 
         /// <summary>
@@ -977,6 +1024,7 @@ namespace TH.Modules.UI
                     mIsCorrectScrolling = false;
                 }
             }
+            mOnBeginDragDelegate?.Invoke(CurrentScrollIndexValue);
         }
 
         /// <summary>
@@ -1000,6 +1048,7 @@ namespace TH.Modules.UI
             mIsEndDrag = true;
             // 避免结束拖拽时没有速度导致未触发onScrollChanged
             OnScrollChanged(Vector2.zero);
+            mOnEndDragDelegate?.Invoke(CurrentScrollIndexValue);
         }
 
         /// <summary>

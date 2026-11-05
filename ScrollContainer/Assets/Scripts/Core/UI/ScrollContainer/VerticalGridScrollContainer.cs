@@ -204,24 +204,6 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
-        /// 滚动回调刷新Cell显示
-        /// </summary>
-        /// <param name="scrollpos"></param>
-        protected override void OnScrollChanged(Vector2 scrollpos)
-        {
-            if (mCellDatas != null)
-            {
-                UpdateScrollValue();
-                mMaskRect.y = mAvalibleScrollDistance * (1 - ScrollRect.verticalNormalizedPosition);
-                for (int i = 0; i < mCellDatas.Count; i++)
-                {
-                    OnCellDisplay(i);
-                }
-                CheckCellPosCorrect(mCurrentScrollDir);
-            }
-        }
-
-        /// <summary>
         /// Get scroll index with specific scroll position
         /// 获取指定滚动位置的单元格滚动索引值
         /// </summary>
