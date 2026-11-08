@@ -17,7 +17,7 @@ using System;
 namespace TH.Modules.UI
 {
     [RequireComponent(typeof(ScrollRect))]
-    [RequireComponent(typeof(Mask))]
+    [RequireComponent(typeof(RectMask2D))]
     [RequireComponent(typeof(Image))]
     /// <summary>
     /// 滚动单元格Cell容器基类抽象
@@ -505,20 +505,19 @@ namespace TH.Modules.UI
         }
 
         /// <summary>
-        /// 滚动到顶部
+        /// 滚动到第一个单元格
         /// </summary>
-        public void MoveToTop()
+        public void MoveToFirst()
         {
             MoveToIndex(0);
         }
 
         /// <summary>
-        /// 滚动到底部
+        /// 滚动到最后一个单元格
         /// </summary>
-        public void MoveToBottom()
+        public void MoveToLast()
         {
-            var totalCellNum = GetCellTotalCount();
-            var lastCellIndex = Mathf.Max(totalCellNum - 1, 0);
+            var lastCellIndex = GetLastCellIndex();
             MoveToIndex(lastCellIndex);
         }
 
@@ -541,9 +540,9 @@ namespace TH.Modules.UI
                                           Action<float, EScrollDir> onScroll = null)
         {
             mOnShowDelegate = onShow;
+            mOnHideDelegate = onHide;
             mOnVisibleScrollDelegate = onVisibleScroll;
             mMoveToIndexDelegate = onMoveto;
-            mOnHideDelegate = onHide;
             mOnBeginDragDelegate = onBeginDrag;
             mOnEndDragDelegate = onEndDrag;
             mOnScrollDelegate = onScroll;
@@ -619,10 +618,13 @@ namespace TH.Modules.UI
         /// <param name="prefabIndexList">预制件索引列表</param>
         /// <param name="cellSizeList">单元格大小列表(为空表示采用预制件默认大小)</param>
         /// <param name="scrollNormalizedPos">单元格初始滚动位置</param>
-        public void SetCellDatas(List<int> prefabIndexList, List<Vector2> cellSizeList = null, Vector2? scrollNormalizedPos = null)
+        /// <param name="disableForceStop">是否禁用强制停止(仅在数量是增加或者相等的情况有效)</param>
+        
+        public void SetCellDatas(List<int> prefabIndexList, List<Vector2> cellSizeList = null,
+                                 Vector2? scrollNormalizedPos = null, bool disableForceStop = false)
         {
             var cellDataList = CreateCellDatas(prefabIndexList, cellSizeList);
-            SetCellDatas(cellDataList, scrollNormalizedPos);
+            SetCellDatas(cellDataList, scrollNormalizedPos, disableForceStop);
         }
 
         /// <summary>
@@ -631,10 +633,11 @@ namespace TH.Modules.UI
         /// </summary>
         /// <param name="cellCount">单元格数量</param>
         /// <param name="scrollNormalizedPos">单元格初始滚动位置</param>
-        public void SetCellCount(int cellCount, Vector2? scrollNormalizedPos = null)
+        /// <param name="disableForceStop">是否禁用强制停止(仅在数量是增加或者相等的情况有效)</param>
+        public void SetCellCount(int cellCount, Vector2? scrollNormalizedPos = null, bool disableForceStop = false)
         {
             var cellDataList = CreateCellDatas(cellCount);
-            SetCellDatas(cellDataList, scrollNormalizedPos);
+            SetCellDatas(cellDataList, scrollNormalizedPos, disableForceStop);
         }
 
         /// <summary>
@@ -643,7 +646,9 @@ namespace TH.Modules.UI
         /// </summary>
         /// <param name="cellDatas">所有的Cell数据</param>
         /// <param name="scrollNormalizedPos">单元格初始滚动位置</param>
-        public void SetCellDatas(List<CellData> cellDatas, Vector2? scrollNormalizedPos = null)
+        /// <param name="disableForceStop">是否禁用强制停止(仅在数量是增加或者相等的情况有效)</param>
+        public void SetCellDatas(List<CellData> cellDatas, Vector2? scrollNormalizedPos = null,
+                                 bool disableForceStop = false)
         {
             // 为了支持比容器先进入Start执行数据设置的情况
             if (mIsCorrectDataComplete == false)
@@ -657,8 +662,13 @@ namespace TH.Modules.UI
                 var preScrollNormalizedPos = ScrollRect.normalizedPosition;
                 // 提前获取最新单元格数据的容器大小
                 var newContentSize = GetContentSizeByDatas(cellDatas);
-
-                ClearCellDatas();
+                var preCellCount = GetCellTotalCount();
+                var newCellCount = cellDatas != null ? cellDatas.Count : 0;
+                if(newCellCount < preCellCount)
+                {
+                    disableForceStop = false;
+                }
+                ClearCellDatas(disableForceStop);
                 mCellDatas = cellDatas;
 
                 var finalScrollNormalizedPos = scrollNormalizedPos;
@@ -690,14 +700,18 @@ namespace TH.Modules.UI
         /// 然后创建时设置单元格数据(setCellDatas)时，直接传入ScrollRect的滚动位置
         /// 最后再OnDestroy的时候再清空自行记录单元格滚动位置数据即可
         /// </summary>
+        /// <param name="disableForceStop">是否禁用强制停止</param>
         /// <returns>返回清除单元格数据时最终停留(如果开启矫正，则为矫正后位置)的滚动位置</returns>
-        public Vector2 ClearCellDatas()
+        public Vector2 ClearCellDatas(bool disableForceStop = false)
         {
             var finalScrollNormalizedPos = ScrollRect.normalizedPosition;
             if (mCellDatas != null)
             {
                 // 调整容器数据时，强行停止滚动相关操作，避免刷新或进池出池等带来的过多问题
-                ForceScrollStop();
+                if (!disableForceStop)
+                {
+                    ForceScrollStop();
+                }
                 // 这里专门返回清除单元格后的滚动位置，方便上层记录后下次快速还原位置
                 // 因为嵌套单元格可能在滚动过程中就进池了，所以进池前必须强制停止并矫正到正确位置
                 finalScrollNormalizedPos = ScrollRect.normalizedPosition;
@@ -722,6 +736,16 @@ namespace TH.Modules.UI
         public int GetCellTotalCount()
         {
             return mCellDatas != null ? mCellDatas.Count : 0;
+        }
+
+        /// <summary>
+        /// 获取最后一个单元格索引
+        /// </summary>
+        /// <returns></returns>
+        public int GetLastCellIndex()
+        {
+            var totalCellNum = GetCellTotalCount();
+            return Mathf.Max(totalCellNum - 1, 0);
         }
 
         /// <summary>
@@ -751,7 +775,8 @@ namespace TH.Modules.UI
                 return null;
             }
         }
- /// <summary>
+    
+        /// <summary>
         /// Add with index
         /// 指定位子添加单元格数据
         /// </summary>

@@ -72,7 +72,7 @@ namespace TH.Modules.UI
         {
             if (base.MoveToIndex(index, moveTime))
             {
-                //Debug.Log($"滚动到索引位置:{index}");
+                Debug.Log($"滚动到索引位置:{index}");
                 CurrentMoveToCellIndex = CorrectMoveToIndex(index);
                 //Debug.Log($"最终滚动到索引位置:{CurrentMoveToCellIndex}");
                 Vector2 cellpos = mCellDatas[CurrentMoveToCellIndex].GetPos();
@@ -197,7 +197,8 @@ namespace TH.Modules.UI
         {
             var viewportHeight = mRootRectContentTrasform.rect.height;
             var preScrollableDistance = Mathf.Max(0f, preContentSize.y - viewportHeight);
-            var preScolledPosYOffset = (1f - preScrollNormalizedPos.y) * preScrollableDistance;
+            var previousNormalizedPosY = preScrollNormalizedPos.y;
+            var preScolledPosYOffset = (mIsReverse ? previousNormalizedPosY : (1f - previousNormalizedPosY)) * preScrollableDistance;
             // 如果之前已滚动的距离大于新的可滚动距离，那么就直接滚动到最底部
             // 反之之前已滚动的距离小于新的可滚动距离，那么就保持该滚动距离算一个新的滚动比例
             var newScrollableDistance = Mathf.Max(0f, newContentSize.y - viewportHeight);

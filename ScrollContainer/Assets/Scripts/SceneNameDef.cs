@@ -85,4 +85,9 @@ public static class SceneNameDef
     /// KeepPosRefreshScene场景
     /// </summary>
     public const string KeepPosRefreshScene = "KeepPosRefreshScene";
+    
+    /// <summary>
+    /// AutoLoadMore场景
+    /// </summary>
+    public const string AutoLoadMoreScene = "AutoLoadMoreScene";
 }

@@ -564,8 +564,6 @@ MonoBehaviour:
   BtnBackToMainMenu: {fileID: 3819588595969719024}
   IFCellNum: {fileID: 8446404353949862286}
   BtnRefreshCellNum: {fileID: 5871314211353916051}
-  BtnScrollToTop: {fileID: 9184852880089985404}
-  BtnScrollToBottom: {fileID: 3140041237135176817}
   KeepPosRefreshContainer: {fileID: 6958191741693656245}
 --- !u!1 &3144701950559851449
 GameObject:
@@ -1008,12 +1006,12 @@ GameObject:
   m_Component:
   - component: {fileID: 6713283725535057180}
   - component: {fileID: 8173461424757200836}
-  - component: {fileID: 7446843482958310451}
   - component: {fileID: 5612719396346015746}
+  - component: {fileID: 8625982192520034919}
   - component: {fileID: 1177818706563997139}
   - component: {fileID: 6958191741693656245}
   m_Layer: 5
-  m_Name: SelectAndDeleteOrMoveContainer
+  m_Name: KeepPosRefreshContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1069,19 +1067,6 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &7446843482958310451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7235516642605736189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 1
 --- !u!222 &5612719396346015746
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1090,6 +1075,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7235516642605736189}
   m_CullTransparentMesh: 0
+--- !u!114 &8625982192520034919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7235516642605736189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding: {x: 0, y: 0, z: 0, w: 0}
+  m_Softness: {x: 0, y: 0}
 --- !u!114 &1177818706563997139
 MonoBehaviour:
   m_ObjectHideFlags: 0

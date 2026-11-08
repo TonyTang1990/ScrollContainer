@@ -97,6 +97,12 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     [Header("保持位置刷新按钮")]
     public Button KeepPosRefresh;
 
+    /// <summary>
+    /// 自动加载更多按钮
+    /// </summary>
+    [Header("自动加载更多按钮")]
+    public Button AutoLoadMore;
+
     void Start ()
     {
         TopToBottom.onClick.AddListener(OnBtnTopToBottom);
@@ -113,6 +119,7 @@ public class ScrollContainerSceneChosen : MonoBehaviour
         SpinDatePicker.onClick.AddListener(OnBtnSpinDatePicker);
         SelectAndDeleteOrMove.onClick.AddListener(OnBtnSelectAndDeleteOrMove);
         KeepPosRefresh.onClick.AddListener(OnBtnKeepPosRefresh);
+        AutoLoadMore.onClick.AddListener(OnBtnAutoLoadMore);
     }
 
     /// <summary>
@@ -225,5 +232,13 @@ public class ScrollContainerSceneChosen : MonoBehaviour
     private void OnBtnKeepPosRefresh()
     {
         SceneManager.LoadScene(SceneNameDef.KeepPosRefreshScene);
+    }
+    
+    /// <summary>
+    /// 自动加载更多按钮点击
+    /// </summary>
+    private void OnBtnAutoLoadMore()
+    {
+        SceneManager.LoadScene(SceneNameDef.AutoLoadMoreScene);
     }
 }
