@@ -854,7 +854,7 @@ MonoBehaviour:
   EventBubbleContainerParent: {fileID: 0}
   SourcePrefabList:
   - {fileID: 266707153130483481}
-  LayoutDirection: 2
+  LayoutDirection: 1
 --- !u!1 &7332198584096030989
 GameObject:
   m_ObjectHideFlags: 0

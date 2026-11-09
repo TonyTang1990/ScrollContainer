@@ -224,7 +224,7 @@ public class AutoLoadMoreScene : MonoBehaviour
     /// <param name="cellInstance"></param>
     private void OnMoveTo(int currentScrollIndex, GameObject cellInstance)
     {
-        Debug.Log($"OnMoveTo: {currentScrollIndex}");
+        //Debug.Log($"OnMoveTo: {currentScrollIndex}");
         // 检测自动滚动完成后的自动加载更多效果
         mIsAutoScrolling = false;
         CheckAutoLoadMoreCell(currentScrollIndex, EScrollDir.None, true);
@@ -238,7 +238,7 @@ public class AutoLoadMoreScene : MonoBehaviour
     /// <param name="currentScrollIndex"></param>
     private void OnBeginDrag(float currentScrollIndex)
     {
-        Debug.Log($"OnBeginDrag: {currentScrollIndex}");
+        //Debug.Log($"OnBeginDrag: {currentScrollIndex}");
         mIsAutoScrolling = false;
         SetScrollTopAndBottomShow(true);
     }
@@ -296,7 +296,7 @@ public class AutoLoadMoreScene : MonoBehaviour
     /// <param name="currentScrollIndex"></param>
     private void OnEndDrag(float currentScrollIndex)
     {
-        Debug.Log($"OnEndDrag: {currentScrollIndex}");
+        //Debug.Log($"OnEndDrag: {currentScrollIndex}");
         mIsAutoScrolling = false;
         // 强制拖拽结束检测一次，避免滚动到底部等操作无法触发自动加载更多单元格
         CheckAutoLoadMoreCell(currentScrollIndex, EScrollDir.None, true);

@@ -368,7 +368,6 @@ namespace TH.Modules.UI
             UpdateScrollable();
             mIsAwakeComplete = true;
             CurrentMoveToCellIndex = -1;
-            mMoveToIndexDelegate = null;
             mMaxCorrectToCellIndex = -1;
             InitPrefabTemplateInfo();
             HideAllPrefabTemplate();
